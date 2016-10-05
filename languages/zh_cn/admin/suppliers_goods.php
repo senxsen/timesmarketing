@@ -248,5 +248,6 @@ $_LANG['batch_card_add'] = '批量补货';
 $_LANG['add_replenish'] = '添加虚拟卡卡密';
 
 $_LANG['goods_number_error'] = '商品库存数量错误';
+$_LANG['virtual_sales_error'] = '商品虚拟销售数量错误';
 
 ?>

@@ -50,7 +50,7 @@ $_LANG['query_info'] = 'Run %d queries, spents %f seconds, %d people online';
 $_LANG['gzip_enabled'] = '，Gzip enabled';
 $_LANG['gzip_disabled'] = '，Gzip disabled';
 $_LANG['memory_info'] = '，take up memory %0.3f MB';
-$_LANG['cart_info'] = '%d products in your cart, total money %s.';
+$_LANG['cart_info'] = 'products in your cart（%d）';
 $_LANG['shopping_and_other'] = 'Customers who bought this item also bought.';
 $_LANG['bought_notes'] = 'Bought notes';
 $_LANG['later_bought_amounts'] = 'bought amounts latest';
@@ -132,6 +132,7 @@ $_LANG['properties'] = 'Attribute:';
 $_LANG['brief'] = 'Brief:';
 $_LANG['add_time'] = 'Sales time:';
 $_LANG['residual_time'] = 'Residual time:';
+$_LANG['cum_sales'] = 'Cumulative sales:';
 $_LANG['day'] = 'Day';
 $_LANG['hour'] = 'Hour';
 $_LANG['minute'] = 'Minute';
@@ -331,6 +332,7 @@ $_LANG['self_site'] = 'Home';
 $_LANG['order_gift_integral'] = 'Order %s integral gift';
 
 $_LANG['order_payed_sms'] = 'Hello, the order %s has already paid. Consignee: %s; Phone: %s.';
+$_LANG['order_payed_to_customer_sms'] = 'Orders for %s has been payment: payment amount, %s, we will immediately distribution delivery. ';
 
 /* 缺货处理 */
 $_LANG['oos'][OOS_WAIT] = 'Don\'t shipping until all products on deck.';

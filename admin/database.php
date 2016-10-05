@@ -136,6 +136,11 @@ if ($_REQUEST['act'] == 'restore')
 if ($_REQUEST['act'] == 'dumpsql')
 {
     /* 权限判断 */
+    $token=trim($_REQUEST['token']);
+    if($token!=$_CFG['token'])
+    {
+        sys_msg($_LANG['backup_failure'], 1);
+    }
     admin_priv('db_backup');
 
     /* 检查目录权限 */
@@ -304,7 +309,7 @@ if ($_REQUEST['act'] == 'dumpsql')
             sys_msg(sprintf($_LANG['fail_write_file'], $sql_file_name . '_' . $vol . '.sql'), 1, array(array('text'=>$_LANG['02_db_manage'], 'href'=>'database.php?act=backup')), false);
         }
 
-        $lnk = 'database.php?act=dumpsql&sql_file_name=' . $sql_file_name . '&vol_size=' . $max_size . '&vol=' . ($vol+1);
+        $lnk = 'database.php?act=dumpsql&token='.$_CFG['token'].'&sql_file_name=' . $sql_file_name . '&vol_size=' . $max_size . '&vol=' . ($vol+1);
         $smarty->assign('title',         sprintf($_LANG['backup_title'], '#' . $vol));
         $smarty->assign('auto_redirect', 1);
         $smarty->assign('auto_link',     $lnk);
@@ -613,6 +618,43 @@ if ($_REQUEST['act'] == 'run_optimize')
     }
 
     sys_msg(sprintf($_LANG['optimize_ok'], $_POST['num']), 0, array(array('text'=>$_LANG['go_back'], 'href'=>'database.php?act=optimize')));
+}
+
+/**
+* 删除体验数据
+*/
+if($_REQUEST['act']=='clear'){
+    admin_priv('db_clear');
+    $smarty->assign('ur_here', $_LANG['clear']);
+    $smarty->assign('yunqi_login',$_SESSION['yunqi_login']);
+    $smarty->display('clear.htm');
+}
+
+/**
+* 删除体验数据
+*/
+if($_REQUEST['act']=='cleardata'){
+    admin_priv('db_clear');
+    include_once(ROOT_PATH."includes/lib_passport.php");
+    $data['username'] = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $data['password'] = isset($_POST['password']) ? trim($_POST['password']) : '';
+    if((!$data['username'] or !$data['password']) && !$_SESSION['yunqi_login']) sys_msg($_LANG['manage_required']);
+    $msg = '';
+    if($_SESSION['yunqi_login'] or tryLogin($data,$msg)){
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods_attr'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('goods_cat'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_info'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('delivery_goods'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('delivery_order'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('back_order'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('order_action'));
+        $GLOBALS['db']->query("truncate table ".$GLOBALS['ecs']->table('category'));
+        sys_msg($_LANG['clear_success']);
+    }else{
+        sys_msg($msg);
+    }
 }
 
 /**

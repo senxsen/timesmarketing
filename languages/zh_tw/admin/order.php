@@ -89,6 +89,7 @@ $_LANG['pay_name'] = '支付方式';
 $_LANG['address'] = '地址';
 $_LANG['order_time'] = '下單時間';
 $_LANG['detail'] = '查看';
+$_LANG['retry'] = '重試';
 $_LANG['phone'] = '電話';
 $_LANG['group_buy'] = '（團購）';
 $_LANG['error_get_goods_info'] = '獲取訂單商品信息錯誤';
@@ -400,4 +401,19 @@ $_LANG['label_return_time'] = '退貨時間';
 $_LANG['tips_back_del'] = '退貨單刪除成功！';
 
 $_LANG['goods_num_err'] = '庫存不足，請重新選擇！';
+
+
+/* ERP綁定 */
+$_LANG['erp_enter']='進入';
+$_LANG['erp_processing_orders']='訂單處理';
+$_LANG['erp_bind_desc'] = '您已開通ERP，請授權綁定';
+$_LANG['erp_bind'] = '去綁定';
+$_LANG['erp_bind_Auth'] = '授權綁定';
+$_LANG['erp_open_desc'] = '已有99%的用戶使用ERP處理訂單';
+$_LANG['erp_open'] = '去開通';
+$_LANG['erp_open_details'] = '了解詳情開通';
+$_LANG['erp_no_longer_prompt'] = '知道了,不再提示';
+$_LANG['erp_reminder'] = '溫馨提示';
+
+
 ?>

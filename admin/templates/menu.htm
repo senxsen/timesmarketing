@@ -13,24 +13,25 @@ var helpLang = "{$help_lang}";
 {literal}
 <style type="text/css">
 body {
-  background: #80BDCB;
+  background: #656565;
 }
 #tabbar-div {
-  background: #278296;
+  background: #5a5a5a;
   padding-left: 10px;
-  height: 21px;
+  height: 36px;
   padding-top: 0px;
 }
 #tabbar-div p {
   margin: 1px 0 0 0;
 }
 .tab-front {
-  background: #80BDCB;
-  line-height: 20px;
+  background: #5a5a5a;
+  color:#ffffff;
   font-weight: bold;
-  padding: 4px 15px 4px 18px;
+  padding-left:10px;
+  height:36px;
+  line-height:36px;
   border-right: 2px solid #335b64;
-  cursor: hand;
   cursor: pointer;
 }
 .tab-back {
@@ -56,10 +57,10 @@ body {
   text-align: center;
 }
 #main-div {
-  border: 1px solid #345C65;
   padding: 5px;
   margin: 5px;
-  background: #FFF;
+  background: #656565;
+  color:#ffffff;
 }
 #menu-list {
   padding: 0;
@@ -69,31 +70,36 @@ body {
   padding: 0;
   margin: 0;
   list-style-type: none;
-  color: #335B64;
+  color: #fff;
+}
+#menu-list>ul>li{
+  margin-top:10px;
+  -webkit-font-smoothing: antialiased;
 }
 #menu-list li {
   padding-left: 16px;
-  line-height: 16px;
-  cursor: hand;
+  line-height: 18px;
   cursor: pointer;
 }
 #main-div a:visited, #menu-list a:link, #menu-list a:hover {
-  color: #335B64
+  color: #fff;
   text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  font-weight:normal !important;
 }
 #menu-list a:active {
   color: #EB8A3D;
 }
 .explode {
-  background: url(images/menu_minus.gif) no-repeat 0px 3px;
+  background: url(images/menu_minus.gif) no-repeat 0 4px;
   font-weight: bold;
 }
 .collapse {
-  background: url(images/menu_plus.gif) no-repeat 0px 3px;
+  background: url(images/menu_plus.gif) no-repeat 0 4px;
   font-weight: bold;
 }
 .menu-item {
-  background: url(images/menu_arrow.gif) no-repeat 0px 3px;
+  /*background: url(images/menu_arrow.gif) no-repeat 0 3px;*/
   font-weight: normal;
 }
 #help-title {
@@ -111,6 +117,14 @@ body {
 }
 .link {
   color: #000099;
+}
+::-webkit-scrollbar{
+  width:8px;
+  background:#757575;
+}
+::-webkit-scrollbar-thumb{
+  background:#3f3f3f;
+  border-radius:6px;
 }
 </style>
 {/literal}
@@ -149,14 +163,14 @@ body {
 </div>
 </div>
 {insert_scripts files="../js/global.js,../js/utils.js,../js/transport.js"}
+{insert_scripts files="./js/menu.js"}
 <script language="JavaScript">
 <!--
 var collapse_all = "{$lang.collapse_all}";
 var expand_all = "{$lang.expand_all}";
 var collapse = true;
 {literal}
-function toggleCollapse()
-{
+function toggleCollapse() {
   var items = document.getElementsByTagName('LI');
   for (i = 0; i < items.length; i++)
   {
@@ -254,18 +268,10 @@ document.getElementById('tabbar-div').onclick=function(e)
 {
   var obj = Utils.srcElement(e);
 
- // var mnuTab = document.getElementById('menu-tab');
   var hlpTab = document.getElementById('help-tab');
   var mnuDiv = document.getElementById('menu-list');
   var hlpDiv = document.getElementById('help-div');
 
-  //if (obj.id == 'menu-tab')
-//  {
-//    mnuTab.className = 'tab-front';
-//    hlpTab.className = 'tab-back';
-//    mnuDiv.style.display = "block";
-//    hlpDiv.style.display = "none";
-//  }
 
   if (obj.id == 'help-tab')
   {
@@ -346,38 +352,34 @@ function createDocument()
 var ToggleHanlder = new Object();
 
 Object.extend(ToggleHanlder ,{
-  SourceObject : new Object(),
+  SourceObject : {},
   CookieName   : 'Toggle_State',
-  RecordState : function(name,state)
-  {
-    if(state == "collapse")
-    {
+  RecordState : function(name,state) {
+    if(state == "collapse") {
       this.SourceObject[name] = state;
-    }
-    else
-    {
-      if(this.SourceObject[name])
-      {
+    } else {
+      if(this.SourceObject[name]) {
         delete(this.SourceObject[name]);
       }
     }
     var date = new Date();
     date.setTime(date.getTime() + 99999999);
-    document.setCookie(this.CookieName, this.SourceObject.toJSONString(), date.toGMTString());
+//    document.setCookie(this.CookieName, this.SourceObject.toJSONString(), date.toGMTString());
+    document.cookie = ''+this.CookieName +' = '+ this.SourceObject.toJSONString()+','+date.toGMTString()+'';
   },
 
-  Reset :function()
-  {
+  Reset :function() {
     var date = new Date();
     date.setTime(date.getTime() + 99999999);
-    document.setCookie(this.CookieName, "{}" , date.toGMTString());
+//    document.setCookie(this.CookieName, "{}" , date.toGMTString());
+    document.cookie = ''+this.CookieName +' = '+ this.SourceObject.toJSONString()+','+date.toGMTString()+'';
   },
 
   Load : function()
   {
     if (document.getCookie(this.CookieName) != null)
     {
-      this.SourceObject = eval("("+ document.getCookie(this.CookieName) +")");
+      this.SourceObject = t_eval(this);
       var items = document.getElementsByTagName('LI');
       for (var i = 0; i < items.length; i++)
       {
@@ -405,17 +407,17 @@ Object.extend(ToggleHanlder ,{
 ToggleHanlder.CookieName += "_{$admin_id}";
 //初始化菜单状态
 ToggleHanlder.Load();
-Ajax.call('cloud.php?is_ajax=1&act=menu_api','', start_menu_api, 'GET', 'JSON');
-function start_menu_api(result)
-{
-      if(result.content==0)
-      {
-      }
-      else
-      {
-          document.getElementById("menu-ul").innerHTML = document.getElementById("menu-ul").innerHTML + result.content;
-      }   
-}
+// Ajax.call('cloud.php?is_ajax=1&act=menu_api','', start_menu_api, 'GET', 'JSON');
+// function start_menu_api(result)
+// {
+//       if(result.content==0)
+//       {
+//       }
+//       else
+//       {
+//           document.getElementById("menu-ul").innerHTML = document.getElementById("menu-ul").innerHTML + result.content;
+//       }   
+// }
 //-->
 </script>
 

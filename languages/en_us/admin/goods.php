@@ -67,6 +67,7 @@ $_LANG['is_hot'] ='Hot';
 $_LANG['is_promote'] ='Sales promotion';
 $_LANG['all_type'] = 'All recommend';
 $_LANG['sort_order'] = 'Recommend to sort';
+$_LANG['virtual_sales'] = 'Virtual sales';
 
 $_LANG['goods_name'] ='Name';
 $_LANG['goods_sn'] ='NO.';
@@ -117,6 +118,7 @@ $_LANG['lab_market_price'] ='Market price:';
 $_LANG['lab_user_price'] ='Member price:';
 $_LANG['lab_promote_price'] ='Promotion price:';
 $_LANG['lab_promote_date'] ='Promotion date:';
+$_LANG['lab_virtual_sales'] = 'Virtual Sales:';
 $_LANG['lab_picture'] ='Upload picture:';
 $_LANG['lab_thumb'] ='Upload thumbnail:';
 $_LANG['auto_thumb'] ='Create thumbnail automatically';
@@ -265,6 +267,7 @@ $_LANG['batch_card_add'] = 'Batch Replenishment';
 $_LANG['add_replenish'] = 'Add virtual Kaka Micronesia';
 
 $_LANG['goods_number_error'] = 'Merchandise inventory quantity errors';
+$_LANG['virtual_sales_error'] = 'Virtual-Sales nums errors ';
 
 /*------------------------------------------------------ */
 //-- 货品

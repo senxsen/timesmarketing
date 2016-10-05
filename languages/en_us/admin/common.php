@@ -17,7 +17,7 @@
 
 $_LANG['app_name'] = 'ECSHOP';
 $_LANG['cp_home'] = 'ECSHOP Management';
-$_LANG['copyright'] = ' &copy; 2005-2012 ECSHOP Copyright, <br> All Right Reserved.';
+$_LANG['copyright'] = ' &copy; 2005-'. date('Y') .' ECSHOP Copyright, <br> All Right Reserved.';
 $_LANG['query_info'] = 'Run %d queries, spend %s seconds';
 $_LANG['memory_info'] = ',memory occupied:%0.3f MB';
 $_LANG['gzip_enabled'] = ',Gzip enabled';
@@ -71,6 +71,7 @@ $_LANG['button_submit'] = ' Submit ';
 $_LANG['button_save'] = ' Save ';
 $_LANG['button_reset'] = ' Reset ';
 $_LANG['button_search'] = ' Search ';
+$_LANG['advanced_search'] = 'Advanced search';
 
 $_LANG['priv_error'] = 'Sorry, you haven\'t authorization to run this operation!';
 $_LANG['drop_confirm'] = 'Are you sure delete this record?';
@@ -128,6 +129,7 @@ $_LANG['gram'] = 'Gram';
 $_LANG['kilogram'] = 'Kilogram';
 
 /* Menu category */
+$_LANG['01_certificate_manage'] = 'Cloud Service Center';
 $_LANG['02_cat_and_goods'] = 'Product';
 $_LANG['03_promotion'] = 'Sales promotion';
 $_LANG['04_order'] = 'Order';
@@ -143,7 +145,7 @@ $_LANG['13_backup'] = 'Database';
 $_LANG['14_sms'] = 'Short Message';
 $_LANG['15_rec'] = 'Recommend management';
 $_LANG['16_email_manage'] = 'Mass-mailing management';
-
+$_LANG['18_lead_manage'] = 'Mobile version management';
 /* Product management */
 $_LANG['01_goods_list'] = 'Product List';
 $_LANG['02_goods_add'] = 'New Product';
@@ -253,7 +255,7 @@ $_LANG['suppliers_list'] = 'Suppliers';
 
 /* System setup */
 $_LANG['01_shop_config'] = 'Configuration';
-$_LANG['shop_authorized'] = 'Authorized';
+// $_LANG['shop_authorized'] = 'Authorized';
 $_LANG['shp_webcollect'] = 'Webcollect';
 $_LANG['02_payment_list'] = 'Payment';
 $_LANG['03_shipping_list'] = 'Shipping';
@@ -340,4 +342,19 @@ $_LANG['brand_name_exist'] = 'Has exist the same brand!';
 
 $_LANG['alipay_login'] = '<a href="https://www.alipay.com/user/login.htm?goto=https%3A%2F%2Fwww.alipay.com%2Fhimalayas%2Fpracticality_profile_edit.htm%3Fmarket_type%3Dfrom_agent_contract%26customer_external_id%3D%2BC4335319945672464113" target="_blank">Immediate payment interface for free jurisdiction</a>';
 $_LANG['alipay_look'] = '<a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">Please apply after successful login pay treasure account check</a>';
+$_LANG['04_sms_sign'] = 'Message signature';
+
+/* 云服务中心 */
+$_LANG['certificate'] = 'Authorization binding';
+$_LANG['service_market'] = 'service market';
+$_LANG['sms_resource'] = 'Sms resource';
+
+/* 服务市场 */
+$_LANG['service_market'] = 'Service Market';
+
+/*云起物流*/
+$_LANG['logistic_tracking'] = 'Logistic Tracking';
+
+/* 移动版全民分销开通引导页 */
+$_LANG['lead'] = 'wap';
 ?>

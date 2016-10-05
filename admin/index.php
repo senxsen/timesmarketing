@@ -16,7 +16,6 @@ define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . '/includes/lib_order.php');
-
 /*------------------------------------------------------ */
 //-- 框架
 /*------------------------------------------------------ */
@@ -52,8 +51,22 @@ elseif ($_REQUEST['act'] == 'top')
     $smarty->assign('send_mail_on',$_CFG['send_mail_on']);
     $smarty->assign('nav_list', $lst);
     $smarty->assign('admin_id', $_SESSION['admin_id']);
-    $smarty->assign('certi', $_CFG['certi']);
-
+    include_once(ROOT_PATH."includes/cls_certificate.php");
+    $cert = new certificate();
+    $certificate = $cert->get_shop_certificate();
+    if($certificate['certificate_id']){
+        $single_page = 'active';
+        $certificate['use_yunqi_authority'] and $single_page = 'detail';
+        $authority_url = $cert->get_authority_url($single_page);
+        $single_url = $cert->get_authority_url('single');
+        $smarty->assign('authority_url',$authority_url);
+        $smarty->assign('single_url',$single_url);
+        $smarty->assign('authorization',$_SESSION['authorization']);//是否授权
+        $smarty->assign('authorize_name',$_SESSION['authorize_name']);//授权名称
+    }
+    $smarty->assign('http_host',$_SERVER['HTTP_HOST']);
+    $smarty->assign('yunqi_login',$_SESSION['yunqi_login']);
+    $smarty->assign('certi', $certificate);
     $smarty->display('top.htm');
 }
 
@@ -476,14 +489,14 @@ elseif ($_REQUEST['act'] == 'main')
     /* 退款申请 */
     $smarty->assign('new_repay', $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
 
-
-
     assign_query_info();
     $smarty->assign('ecs_version',  VERSION);
     $smarty->assign('ecs_release',  RELEASE);
     $smarty->assign('ecs_lang',     $_CFG['lang']);
     $smarty->assign('ecs_charset',  strtoupper(EC_CHARSET));
     $smarty->assign('install_date', local_date($_CFG['date_format'], $_CFG['install_date']));
+    $smarty->assign('pmp_desktop',PMP_DESKTOP);
+    $smarty->assign('pmp_market',PMS_MARKET);
     $smarty->display('start.htm');
 }
 elseif ($_REQUEST['act'] == 'main_api')

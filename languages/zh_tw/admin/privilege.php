@@ -93,4 +93,9 @@ $_LANG['label_captcha'] = '驗證碼：';
 $_LANG['click_for_another'] = '看不清？點擊更換另一個驗證碼。';
 $_LANG['signin_now'] = '進入管理中心';
 $_LANG['remember'] = '請保存我這次的登錄信息。';
+$_LANG['other_login_methods'] = '其他登錄方式';
+$_LANG['yunqi_account'] = '雲起賬號';
+$_LANG['back_local_login'] = '返回本地登錄';
+$_LANG['ecshop_account'] = 'ECshop賬號';
+$_LANG['ecshop_login'] = 'ECshop登錄';
 ?>

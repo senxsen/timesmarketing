@@ -22,7 +22,7 @@ $_LANG['upop_merAbbr']               = '商戶名稱';
 $_LANG['upop_account']              = '商戶帳號';
 $_LANG['upop_security_key']            = '商戶密鑰';
 
-$_LANG['upop_button']               = '馬上使用銀聯支付';
+$_LANG['upop_button']               = '立即支付';
 $_LANG['upop_txn_id']               = '銀聯交易號';
 
 ?>

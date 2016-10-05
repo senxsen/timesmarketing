@@ -75,6 +75,7 @@ $_LANG['back_page_up'] = '返回上一页';
 $_LANG['back_account_log'] = '返回帐户明细列表';
 $_LANG['amount_gt_zero'] = '请在“金额”栏输入大于0的数字';
 $_LANG['select_payment_pls'] = '请选择支付方式';
+$_LANG['check_account_money_fail'] = '修改的金额与充值金额不相等，不能进行修改';
 
 //JS语言项
 $_LANG['account_js']['surplus_amount_empty'] = '请输入您要操作的金额数量！';
@@ -286,6 +287,9 @@ $_LANG['business_message'] = '发送/查看商家留言';
 $_LANG['pay_order_by_surplus'] = '追加使用余额支付订单：%s';
 $_LANG['return_surplus_on_cancel'] = '取消订单 %s，退回支付订单时使用的预付款';
 $_LANG['return_integral_on_cancel'] = '取消订单 %s，退回支付订单时使用的积分';
+$_LANG['repurchase'] = '再次购买';
+$_LANG['delivery_info'] = '查看物流';
+$_LANG['delivery_status'] = '查询状态';
 
 /* 订单状态 */
 $_LANG['os'][OS_UNCONFIRMED] = '未确认';
@@ -336,6 +340,7 @@ $_LANG['order_postscript'] = '订单附言';
 $_LANG['order_number'] = '订单号';
 $_LANG['consignment'] = '发货单';
 $_LANG['shopping_money'] = '商品总价';
+$_LANG['goods_discount_fee'] = '商品折扣';
 $_LANG['invalid_order_id'] = '订单号错误';
 $_LANG['shipping'] = '配送方式';
 $_LANG['payment'] = '支付方式';
@@ -344,6 +349,7 @@ $_LANG['use_card'] = '使用贺卡';
 $_LANG['order_total_fee'] = '订单总金额';
 $_LANG['order_money_paid'] = '已付款金额';
 $_LANG['order_amount'] = '应付款金额';
+$_LANG['order_refund'] = '应退款金额';
 $_LANG['accessories'] = '配件';
 $_LANG['largess'] = '赠品';
 $_LANG['use_more_surplus'] = '追加使用余额';

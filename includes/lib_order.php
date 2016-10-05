@@ -410,7 +410,7 @@ function card_fee($card_id, $goods_amount)
 function order_info($order_id, $order_sn = '')
 {
     /* 计算订单各种费用之和的语句 */
-    $total_fee = " (goods_amount - discount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee) AS total_fee ";
+    $total_fee = " (goods_amount - discount - goods_discount_fee + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee) AS total_fee ";
     $order_id = intval($order_id);
     if ($order_id > 0)
     {
@@ -442,6 +442,7 @@ function order_info($order_id, $order_sn = '')
         $order['formated_surplus']        = price_format($order['surplus'], false);
         $order['formated_order_amount']   = price_format(abs($order['order_amount']), false);
         $order['formated_add_time']       = local_date($GLOBALS['_CFG']['time_format'], $order['add_time']);
+        $order['formated_goods_discount_fee']   = price_format($order['goods_discount_fee'], false);
     }
 
     return $order;
@@ -835,8 +836,18 @@ function order_fee($order, $goods, $consignee)
  */
 function update_order($order_id, $order)
 {
-    return $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_info'),
+    // 对接erp将订单推送到erp 
+    $order['lastmodify'] = gmtime();
+    $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('order_info'),
         $order, 'UPDATE', "order_id = '$order_id'");
+
+    // $order_sn = $GLOBALS['db']->getOne("SELECT order_sn FROM ".$GLOBALS['ecs']->table('order_info')." WHERE order_id='{$order_id}'");
+    // if ($order_sn) {
+    //     include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    //     $matrix = new matrix;
+    //     $matrix->createOrder($order_sn);
+    // }
+    return true;
 }
 
 /**
@@ -1009,7 +1020,7 @@ function cart_weight_price($type = CART_GENERAL_GOODS)
  * @param   integer $parent     基本件
  * @return  boolean
  */
-function addto_cart($goods_id, $num = 1, $spec = array(), $parent = 0)
+function addto_cart($goods_id, $num = 1, $spec = array(), $parent = 0, $rec_type = CART_GENERAL_GOODS)
 {
     $GLOBALS['err']->clean();
     $_parent_id = $parent;
@@ -1125,7 +1136,7 @@ function addto_cart($goods_id, $num = 1, $spec = array(), $parent = 0)
         'extension_code'=> $goods['extension_code'],
         'is_gift'       => 0,
         'is_shipping'   => $goods['is_shipping'],
-        'rec_type'      => CART_GENERAL_GOODS
+        'rec_type'      => $rec_type
     );
 
     /* 如果该配件在添加为基本件的配件时，所设置的“配件价格”比原价低，即此配件在价格上提供了优惠， */
@@ -1581,7 +1592,7 @@ function order_refund($order, $refund_type, $refund_note, $refund_amount = 0)
  * @access  public
  * @return  array
  */
-function get_cart_goods()
+function get_cart_goods($rec_type = CART_GENERAL_GOODS)
 {
     /* 初始化 */
     $goods_list = array();
@@ -1596,7 +1607,7 @@ function get_cart_goods()
     /* 循环、统计 */
     $sql = "SELECT *, IF(parent_id, parent_id, goods_id) AS pid " .
             " FROM " . $GLOBALS['ecs']->table('cart') . " " .
-            " WHERE session_id = '" . SESS_ID . "' AND rec_type = '" . CART_GENERAL_GOODS . "'" .
+            " WHERE session_id = '" . SESS_ID . "' AND rec_type = '" . $rec_type . "'" .
             " ORDER BY pid, parent_id";
     $res = $GLOBALS['db']->query($sql);
 
@@ -1626,6 +1637,7 @@ function get_cart_goods()
         /* 查询规格 */
         if (trim($row['goods_attr']) != '')
         {
+            $row['goods_attr']=addslashes($row['goods_attr']);
             $sql = "SELECT attr_value FROM " . $GLOBALS['ecs']->table('goods_attr') . " WHERE goods_attr_id " .
             db_create_in($row['goods_attr']);
             $attr_list = $GLOBALS['db']->getCol($sql);
@@ -2391,7 +2403,7 @@ function order_amount_field($alias = '')
 {
     return "   {$alias}goods_amount + {$alias}tax + {$alias}shipping_fee" .
            " + {$alias}insure_fee + {$alias}pay_fee + {$alias}pack_fee" .
-           " + {$alias}card_fee ";
+           " + {$alias}card_fee - {$alias}goods_discount_fee - {$alias}discount";
 }
 
 /**
@@ -2992,5 +3004,66 @@ function judge_package_stock($package_id, $package_num = 1)
     }
 
     return false;
+}
+
+/**
+ * 是否开启物流追踪
+ * @return  boolen
+ */
+function is_open_logistics_trace(){
+    return get_certificate_info('yunqiexp_active');
+}
+
+function get_logistics_trace($order_sn, $limit = 0, $lang){
+    require_once(ROOT_PATH . 'languages/' . $lang . '/corp.php');
+    $sql = "select shipping_id,shipping_name,invoice_no from ".$GLOBALS['ecs']->table('delivery_order')." where order_sn='".$order_sn."'";
+    $row = $GLOBALS['db']->getRow($sql);
+    if($row['shipping_id']==0){
+        $row['expcode'] = array_search($row['shipping_name'], $corp);
+    }else{
+        $sql = "select o.invoice_no,s.`shipping_code`,o.order_sn from " . $GLOBALS['ecs']->table('delivery_order') . "  as o left join " . $GLOBALS['ecs']->table('shipping') . " as s on o.`shipping_id` = s.`shipping_id` 
+        where o.order_sn = '$order_sn'";
+        $row = $GLOBALS['db']->getRow($sql);
+        if(!$row['invoice_no']){
+             $sql = "select invoice_no from " . $GLOBALS['ecs']->table('order_info') . " where order_sn = '".$order_sn."'  ";
+             $row['invoice_no'] = $GLOBALS['db']->getOne($sql);
+        }
+        $row['expcode'] = strtoupper(str_replace(array('sf_express','sto_express'), array('sf','sto'), $row['shipping_code']));
+        if(!in_array($row['expcode'], array_keys($corp))) return array();
+        // $row['expno'] = $corp[$row['expcode']];
+    }
+    $row['expno'] = $row['invoice_no'];
+    include_once(ROOT_PATH . 'includes/cls_certificate.php');
+    $cert = new certificate();
+    $tData = $cert->yqexp_exp_get($row);
+    if($tData){
+        $cur_day = '';
+        $cweekday = array("周日","周一","周二","周三","周四","周五","周六");
+        foreach ($tData as &$v) {
+            $time = explode(' ', $v['AcceptTime']);
+            $v['day'] = $time[0];
+            $v['time'] = $time[1];
+            $v['weekday'] = $cweekday[date("w",strtotime($v['AcceptTime']))];
+            $v['display'] = 'hidden';
+            if( $cur_day != $v['day'] ){
+                $v['display'] = '';
+                $cur_day = $v['day'];
+            }
+        }
+        return $limit?array_slice($tData,0, $limit):$tData;
+    }
+    return array();
+}
+
+/**
+ * 矩阵接口重试 
+ * @param $order_sn  订单编号
+ */
+function order_retry($order_sn){
+    include_once(ROOT_PATH.'includes/cls_matrix.php');
+    $matrix = new matrix();
+    $row = $matrix->get_callback($order_sn);
+    $matrix->http_request_matrix($row['data']['params'],'retry');
+    return true;
 }
 ?>

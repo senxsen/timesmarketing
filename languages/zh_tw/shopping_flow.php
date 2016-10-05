@@ -67,6 +67,7 @@ $_LANG['password_js']['show_div_exit'] = '關閉';
 $_LANG['goods_fittings'] = '商品相關配件';
 $_LANG['parent_name'] = '相關商品：';
 $_LANG['remark_package'] = '禮包';
+$_LANG['repurchase_fail'] = '不可以再次購買';
 
 /* 優惠活動 */
 $_LANG['favourable_name'] = '活動名稱：';

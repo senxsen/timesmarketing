@@ -20,7 +20,7 @@ if (!defined('IN_ECS'))
 
 define('ECS_ADMIN', true);
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 if (__FILE__ == '')
 {
@@ -152,7 +152,7 @@ if ($_REQUEST['act'] == 'captcha')
 {
     include(ROOT_PATH . 'includes/cls_captcha.php');
 
-    $img = new captcha('../data/captcha/');
+    $img = new captcha('../data/captcha/',104,36);
     @ob_end_clean(); //清除之前出现的多余输入
     $img->generate_image();
 
@@ -249,7 +249,7 @@ if(isset($_GET['ent_id']) && isset($_GET['ent_ac']) &&  isset($_GET['ent_sign'])
 /* 验证管理员身份 */
 if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
     $_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
-    $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order')
+    $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order' && $_REQUEST['act'] != 'yq_login' && $_REQUEST['act'] != 'is_yunqi_admin')
 {
     /* session 不存在，检查cookie */
     if (!empty($_COOKIE['ECSCP']['admin_id']) && !empty($_COOKIE['ECSCP']['admin_pass']))
@@ -323,6 +323,8 @@ if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
     }
 }
 
+$smarty->assign('token', $_CFG['token']);
+
 if ($_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
     $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order')
 {
@@ -360,11 +362,11 @@ header('Pragma: no-cache');
 
 if ((DEBUG_MODE & 1) == 1)
 {
-//    error_reporting(E_ALL);
+    error_reporting(E_ALL);
 }
 else
 {
-//    error_reporting(E_ALL ^ E_NOTICE);
+    error_reporting(E_ALL ^ E_NOTICE);
 }
 if ((DEBUG_MODE & 4) == 4)
 {
@@ -381,4 +383,15 @@ else
     ob_start();
 }
 
+/* 云起认证 */
+include_once(ROOT_PATH."includes/cls_certificate.php");
+$cert = new certificate();
+$certificate = $cert->get_shop_certificate();
+if(!$certificate['certificate_id']){
+    $callback = $ecs->url()."admin/certificate.php?act=get_certificate&type=index";
+    $iframe_url = $cert->get_authorize_url($callback);
+    $smarty->assign('iframe_url',$iframe_url);
+}
+$smarty->assign('certi',$certificate);
+/* 云起认证 */
 ?>

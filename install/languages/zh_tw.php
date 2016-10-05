@@ -16,7 +16,7 @@
 /* 通用語言項 */
 $_LANG['prev_step'] = '上一步：';
 $_LANG['next_step'] = '下一步：';
-$_LANG['copyright'] = '&copy; 2005-2012 <a href="http://www.ecshop.com" target="_blank">上海商派网络科技有限公司</a>。保留所有權利。';
+$_LANG['copyright'] = '&copy; 2005-2016 <a href="http://www.ecshop.com" target="_blank">上海商派軟件有限公司</a>。保留所有權利。';
 
 
 /* 歡迎頁 */
@@ -118,6 +118,8 @@ $_LANG['admin_user'][] = '訂單列表|order.php?act=list';
 $_LANG['admin_user'][] = '用戶評論|comment_manage.php?act=list';
 $_LANG['admin_user'][] = '會員列表|users.php?act=list';
 $_LANG['admin_user'][] = '商店設置|shop_config.php?act=list_edit';
+$_LANG['admin_user'][] = '移動版|lead.php?act=list';
+$_LANG['admin_user'][] = '服務市場|service_market.php';
 $_LANG['password_intensity'] = '密碼強度：';
 $_LANG['pwd_lower'] = '弱';
 $_LANG['pwd_middle'] = '中';
@@ -161,7 +163,7 @@ $_LANG['js_languages']['create_admin_passport'] = '創建管理員帳號........
 $_LANG['js_languages']['do_others'] = '處理其它............';
 $_LANG['js_languages']['display_detail'] = '顯示細節';
 $_LANG['js_languages']['hide_detail'] = '隱藏細節';
-$_LANG['js_languages']['has_been_stopped'] = '安裝進程已中止';
+$_LANG['js_languages']['has_been_stopped'] = '安裝進程已完成';
 $_LANG['js_languages']['setup_ucenter'] = '註冊到UCenter............';
 $_LANG['js_languages']['password_invaild'] = '密碼必須同時包含字母及數字';
 $_LANG['js_languages']['password_short'] = '密碼長度不能小於8';

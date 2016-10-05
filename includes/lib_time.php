@@ -25,7 +25,8 @@ if (!defined('IN_ECS'))
  */
 function gmtime()
 {
-    return (time() - date('Z'));
+    // return (time() - date('Z'));
+    return time();
 }
 
 /**
@@ -95,7 +96,9 @@ function local_date($format, $time = NULL)
         return '';
     }
 
-    $time += ($timezone * 3600);
+    if (function_exists('date_default_timezone_get') && date_default_timezone_get() == 'UTC') {
+        $time += ($timezone * 3600);
+    }
 
     return date($format, $time);
 }

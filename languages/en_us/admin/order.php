@@ -91,6 +91,7 @@ $_LANG['pay_name'] = 'Payment method';
 $_LANG['address'] = 'Address';
 $_LANG['order_time'] = 'Time';
 $_LANG['detail'] = 'View';
+$_LANG['retry'] = 'Retry';
 $_LANG['phone'] = 'Phone';
 $_LANG['group_buy'] = '(Associates)';
 $_LANG['error_get_goods_info'] = 'Orders for merchandise to obtain information error';
@@ -400,4 +401,19 @@ $_LANG['label_return_time'] = 'Returned Time';
 $_LANG['tips_back_del'] = 'Return a single deletion of success!';
 
 $_LANG['goods_num_err'] = 'Stocks, please re-select!';
+
+
+/* ERP绑定 */
+$_LANG['erp_enter']='enter';
+$_LANG['erp_processing_orders']='Processing orders';
+$_LANG['erp_bind_desc'] = 'You have already opened ERP, please authorize the binding';
+$_LANG['erp_bind'] = 'To bind';
+$_LANG['erp_bind_Auth'] = 'Authorization binding';
+$_LANG['erp_open_desc'] = 'Already 99% of users use ERP to process orders';
+$_LANG['erp_open'] = 'To open';
+$_LANG['erp_open_details'] = 'To understand the details of the opening';
+$_LANG['erp_no_longer_prompt'] = 'Know, no longer prompt';
+$_LANG['erp_reminder'] = 'reminder';
+
+
 ?>

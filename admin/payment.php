@@ -36,6 +36,7 @@ if ($_REQUEST['act'] == 'list')
 
     /* 取得插件文件中的支付方式 */
     $modules = read_modules('../includes/modules/payment');
+    $yunqi_payment = array();
     for ($i = 0; $i < count($modules); $i++)
     {
         $code = $modules[$i]['code'];
@@ -64,18 +65,48 @@ if ($_REQUEST['act'] == 'list')
        {
             $tenpayc2c = $modules[$i];
        }
+       if ($modules[$i]['pay_code'] == 'yunqi')
+       {
+            $yunqi_payment = $modules[$i];
+            unset($modules[$i]);
+       }
     }
 
+
+
     include_once(ROOT_PATH.'includes/lib_compositor.php');
+    $yunqi_payment and array_unshift($modules, $yunqi_payment);
 
     assign_query_info();
 
     $smarty->assign('ur_here', $_LANG['02_payment_list']);
     $smarty->assign('modules', $modules);
     $smarty->assign('tenpayc2c', $tenpayc2c);
+    $smarty->assign('account_url',YUNQI_ACCOUNT_URL);
     $smarty->display('payment_list.htm');
 }
 
+/*------------------------------------------------------ */
+//-- 获取云起收银账号
+/*------------------------------------------------------ */
+elseif($_REQUEST['act']=='check_yunqi'){
+   //获取云起收银账号
+    include_once(ROOT_PATH.'includes/cls_certificate.php');
+    $cert = new certificate();
+    $yunqi_account = $cert->get_yunqi_account();
+    if(!$yunqi_account || !$yunqi_account['status']){
+        $yqaccount_result = $cert->yqaccount_appget();
+        if($yqaccount_result['status']=='success'){
+            $cert->set_yunqi_account(array('appkey'=>$yqaccount_result['data']['appkey'],'appsecret'=>$yqaccount_result['data']['appsecret'],'status'=>true));
+            echo json_encode(array('status'=>true));exit;
+        }else{
+            echo json_encode(array('status'=>false));exit;
+        }
+    }else{
+        echo json_encode(array('status'=>true));exit;
+    }
+    //获取云起收银账号end 
+}
 /*------------------------------------------------------ */
 //-- 安装支付方式 ?act=install&code=".$code."
 /*------------------------------------------------------ */
@@ -216,10 +247,13 @@ elseif ($_REQUEST['act'] == 'edit')
         $store = unserialize($pay['pay_config']);
         /* 取出已经设置属性的code */
         $code_list = array();
-        foreach ($store as $key=>$value)
-        {
-            $code_list[$value['name']] = $value['value'];
+        if($store){
+           foreach ($store as $key=>$value)
+            {
+                $code_list[$value['name']] = $value['value'];
+            }
         }
+        
         $pay['pay_config'] = array();
 
         /* 循环插件中所有属性 */

@@ -89,6 +89,7 @@ $_LANG['pay_name'] = '支付方式';
 $_LANG['address'] = '地址';
 $_LANG['order_time'] = '下单时间';
 $_LANG['detail'] = '查看';
+$_LANG['retry'] = '重试';
 $_LANG['phone'] = '电话';
 $_LANG['group_buy'] = '（团购）';
 $_LANG['error_get_goods_info'] = '获取订单商品信息错误';
@@ -176,6 +177,7 @@ $_LANG['label_total_weight'] = '商品总重量：';
 
 $_LANG['label_goods_amount'] = '商品总金额：';
 $_LANG['label_discount'] = '折扣：';
+$_LANG['label_goods_discount_fee'] = '商品折扣：';
 $_LANG['label_tax'] = '发票税额：';
 $_LANG['label_shipping_fee'] = '配送费用：';
 $_LANG['label_insure_fee'] = '保价费用：';
@@ -401,4 +403,19 @@ $_LANG['label_return_time'] = '退货时间';
 $_LANG['tips_back_del'] = '退货单删除成功！';
 
 $_LANG['goods_num_err'] = '库存不足，请重新选择！';
+
+
+/* ERP绑定 */
+$_LANG['erp_enter']='进入';
+$_LANG['erp_processing_orders']='订单处理';
+$_LANG['erp_bind_desc'] = '您已开通ERP，请授权绑定';
+$_LANG['erp_bind'] = '去绑定';
+$_LANG['erp_bind_Auth'] = '授权绑定';
+$_LANG['erp_open_desc'] = '已有99%的用户使用ERP处理订单';
+$_LANG['erp_open'] = '去开通';
+$_LANG['erp_open_details'] = '了解详情开通';
+$_LANG['erp_no_longer_prompt'] = '知道了,不再提示';
+$_LANG['erp_reminder'] = '温馨提示';
+
+
 ?>

@@ -28,6 +28,21 @@ $_LANG['number'] = 'Quantity';
 $_LANG['display'] = 'Display';
 $_LANG['select_plz'] = 'Please select...';
 $_LANG['button_restore'] = 'Repeal';
+$_LANG['version_desc'] = 'Version description';
+$_LANG['developer'] = 'developer';
+$_LANG['upload_template'] = 'Upload Template';
+$_LANG['batch_upload_template'] = 'bulk upload template';
+$_LANG['browse_local_template'] = 'Browse local template file';
+$_LANG['cannot_open_template_select'] = 'Unable to open template selection window?';
+$_LANG['click'] = 'click';
+$_LANG['the_upload_template'] = 'The uploaded template';
+$_LANG['sure'] = 'OK';
+$_LANG['auto_decomp_install'] = 'auto-extracting installation';
+$_LANG['del_template_confirm'] = 'Are you sure to delete this template?';
+$_LANG['del_success'] = 'deleted successfully';
+$_LANG['del_fail'] = 'Delete failed';
+$_LANG['upload_success'] =' Upload successful! ';
+$_LANG['upload_format_error'] = 'The file you selected is not formatted correctly, please upload tgz file';
 
 /* Prompting message */
 $_LANG['library_not_written'] = 'Library file %s hasn\'t right to edit, so edit the library file has failed.';

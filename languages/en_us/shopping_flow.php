@@ -69,6 +69,7 @@ $_LANG['password_js']['show_div_exit'] = 'Close';
 $_LANG['goods_fittings'] = 'Goods Fittings';
 $_LANG['parent_name'] = 'Goods Releate：';
 $_LANG['remark_package'] = 'Preferential Packeage';
+$_LANG['repurchase_fail'] = 'You can not buy again';
 
 /* 优惠活动 */
 $_LANG['favourable_name'] = 'Favourable name:';

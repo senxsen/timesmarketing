@@ -118,4 +118,11 @@ $_LANG['cannot_modify'] = '不能修改文件';
 
 $_LANG['confirm_remove'] = '你确定要删除选中数据吗？';
 
+$_LANG['manager_username'] = '请输入管理员用户名：';
+$_LANG['manager_password'] = '请输入管理员密码：';
+$_LANG['clear_demo_data'] = '清除体验数据';
+$_LANG['manage_required'] = '请输入超级管理员账号和密码';
+$_LANG['login_failure'] = '用户名或密码错误';
+$_LANG['clear_success'] = '清除成功';
+
 ?>

@@ -20,7 +20,7 @@ $_LANG['email'] = '電子郵箱';
 $_LANG['password'] = '登錄密碼';
 $_LANG['domain'] = '網店域名';
 $_LANG['register_new'] = '註冊新賬號';
-$_LANG['error_tips'] = '請在商店設置->短信設置，先注冊短信服務并正確配置短信服務！';
+$_LANG['error_tips'] = '請用雲起帳號登入後臺，進行設定！';
 $_LANG['enable_old'] = '啟用已有賬號';
 
 /* 短信特服信息 */
@@ -147,5 +147,20 @@ $_LANG['js_languages']['end_date_format_error'] = '結束日期格式不對。';
 //--充值
 $_LANG['js_languages']['money_empty_error'] = '請輸入您要充值的金額。';
 $_LANG['js_languages']['money_format_error'] = '金額格式不對。';
+
+
+$_LANG['insert_sign'] = '請輸入短信簽名';
+$_LANG['insert_succ'] = '添加成功';
+$_LANG['error_smg'] = '信息錯誤';
+$_LANG['edit_succ'] = '修改成功';
+$_LANG['default_succ'] = '簽名默認成功';
+$_LANG['no_default'] = '未有此默認值';
+$_LANG['add_sign'] = '新添短信簽名';
+$_LANG['new_default_sign'] = '當前默認簽名爲';
+$_LANG['default_sign'] = '原簽名';
+$_LANG['add'] = '添加';
+$_LANG['edited'] = '修改爲';
+$_LANG['edit'] = '修改';
+$_LANG['set_default_sign'] = '設置成默認簽名';
 
 ?>

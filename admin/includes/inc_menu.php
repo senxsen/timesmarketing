@@ -18,6 +18,11 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+$modules['01_certificate_manage']['certificate']        = 'certificate.php?act=list_edit';//授权，绑定矩阵
+$modules['01_certificate_manage']['service_market']     = 'service_market.php';//服务市场
+$modules['01_certificate_manage']['sms_resource']     = 'sms_resource.php';//短信平台
+$modules['01_certificate_manage']['logistic_tracking']  = 'logistic_tracking.php';//云起物流
+
 $modules['02_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
 $modules['02_cat_and_goods']['02_goods_add']        = 'goods.php?act=add';          // 添加商品
 $modules['02_cat_and_goods']['03_category_list']    = 'category.php?act=list';
@@ -98,7 +103,7 @@ $modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';
 $modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
 
 $modules['11_system']['01_shop_config']             = 'shop_config.php?act=list_edit';
-$modules['11_system']['shop_authorized']             = 'license.php?act=list_edit';
+// $modules['11_system']['shop_authorized']             = 'license.php?act=list_edit';
 $modules['11_system']['02_payment_list']            = 'payment.php?act=list';
 $modules['11_system']['03_shipping_list']           = 'shipping.php?act=list';
 $modules['11_system']['04_mail_settings']           = 'shop_config.php?act=mail_settings';
@@ -130,10 +135,12 @@ $modules['13_backup']['03_db_optimize']             = 'database.php?act=optimize
 $modules['13_backup']['04_sql_query']               = 'sql.php?act=main';
 //$modules['13_backup']['05_synchronous']             = 'integrate.php?act=sync';
 $modules['13_backup']['convert']                    = 'convert.php?act=main';
+$modules['13_backup']['clear']                      = 'database.php?act=clear';
 
 
 //$modules['14_sms']['02_sms_my_info']                = 'sms.php?act=display_my_info';
 $modules['14_sms']['03_sms_send']                   = 'sms.php?act=display_send_ui';
+$modules['14_sms']['04_sms_sign']                   = 'sms.php?act=sms_sign';
 //$modules['14_sms']['04_sms_charge']                 = 'sms.php?act=display_charge_ui';
 //$modules['14_sms']['05_sms_send_history']           = 'sms.php?act=display_send_history_ui';
 //$modules['14_sms']['06_sms_charge_history']         = 'sms.php?act=display_charge_history_ui';
@@ -145,4 +152,8 @@ $modules['16_email_manage']['email_list']           = 'email_list.php?act=list';
 $modules['16_email_manage']['magazine_list']        = 'magazine_list.php?act=list';
 $modules['16_email_manage']['attention_list']       = 'attention_list.php?act=list';
 $modules['16_email_manage']['view_sendlist']        = 'view_sendlist.php?act=list';
+
+
+
+$modules['18_lead_manage']['lead']        = 'lead.php?act=list';//移动版全民分销开通引导页
 ?>

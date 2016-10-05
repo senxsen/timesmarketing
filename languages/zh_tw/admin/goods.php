@@ -64,6 +64,7 @@ $_LANG['is_hot'] = '熱銷';
 $_LANG['is_promote'] = '特價';
 $_LANG['all_type'] = '全部推薦';
 $_LANG['sort_order'] = '推薦排序';
+$_LANG['virtual_sales'] = '虛擬銷量';
 
 $_LANG['goods_name'] = '商品名稱';
 $_LANG['goods_sn'] = '貨號';
@@ -114,6 +115,7 @@ $_LANG['lab_market_price'] = '市場售價：';
 $_LANG['lab_user_price'] = '會員價格：';
 $_LANG['lab_promote_price'] = '促銷價：';
 $_LANG['lab_promote_date'] = '促銷日期：';
+$_LANG['lab_virtual_sales'] = '虛擬銷量：';
 $_LANG['lab_picture'] = '上傳商品圖片：';
 $_LANG['lab_thumb'] = '上傳商品縮略圖：';
 $_LANG['auto_thumb'] = '自動生成商品縮略圖';
@@ -261,6 +263,7 @@ $_LANG['batch_card_add'] = '批量補貨';
 $_LANG['add_replenish'] = '添加虛擬卡卡密';
 
 $_LANG['goods_number_error'] = '商品庫存數量錯誤';
+$_LANG['virtual_sales_error'] = '商品虛擬销售數量錯誤';
 
 /*------------------------------------------------------ */
 //-- 貨品

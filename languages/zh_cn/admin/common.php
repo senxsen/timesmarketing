@@ -15,7 +15,7 @@
 
 $_LANG['app_name'] = 'ECSHOP';
 $_LANG['cp_home'] = 'ECSHOP 管理中心';
-$_LANG['copyright'] = '版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。';
+$_LANG['copyright'] = '版权所有 &copy; 2005-'. date('Y') .' 上海商派软件有限公司，并保留所有权利。';
 $_LANG['query_info'] = '共执行 %d 个查询，用时 %s 秒';
 $_LANG['memory_info'] = '，内存占用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已启用';
@@ -69,6 +69,7 @@ $_LANG['button_submit'] = ' 确定 ';
 $_LANG['button_save'] = ' 保存 ';
 $_LANG['button_reset'] = ' 重置 ';
 $_LANG['button_search'] = ' 搜索 ';
+$_LANG['advanced_search'] = '高级搜索';
 
 $_LANG['priv_error'] = '对不起,您没有执行此项操作的权限!';
 $_LANG['drop_confirm'] = '您确认要删除这条记录吗?';
@@ -129,6 +130,7 @@ $_LANG['gram'] = '克';
 $_LANG['kilogram'] = '千克';
 
 /* 菜单分类部分 */
+$_LANG['01_certificate_manage'] = '云服务中心';
 $_LANG['02_cat_and_goods'] = '商品管理';
 $_LANG['03_promotion'] = '促销管理';
 $_LANG['04_order'] = '订单管理';
@@ -144,6 +146,7 @@ $_LANG['13_backup'] = '数据库管理';
 $_LANG['14_sms'] = '短信管理';
 $_LANG['15_rec'] = '推荐管理';
 $_LANG['16_email_manage'] = '邮件群发管理';
+$_LANG['18_lead_manage'] = '移动版管理';
 
 /* 商品管理 */
 $_LANG['01_goods_list'] = '商品列表';
@@ -255,7 +258,7 @@ $_LANG['suppliers_list'] = '供货商列表';
 
 /* 系统设置 */
 $_LANG['01_shop_config'] = '商店设置';
-$_LANG['shop_authorized'] = '授权证书';
+// $_LANG['shop_authorized'] = '授权证书';
 $_LANG['shp_webcollect'] = '网罗天下';
 $_LANG['02_payment_list'] = '支付方式';
 $_LANG['03_shipping_list'] = '配送方式';
@@ -285,6 +288,7 @@ $_LANG['03_db_optimize'] = '数据表优化';
 $_LANG['04_sql_query'] = 'SQL查询';
 $_LANG['05_synchronous'] = '同步数据';
 $_LANG['convert'] = '转换数据';
+$_LANG['clear'] = '体验数据清除';
 
 /* 短信管理 */
 $_LANG['02_sms_my_info'] = '账号信息';
@@ -292,6 +296,9 @@ $_LANG['03_sms_send'] = '发送短信';
 $_LANG['04_sms_charge'] = '账户充值';
 $_LANG['05_sms_send_history'] = '发送记录';
 $_LANG['06_sms_charge_history'] = '充值记录';
+
+
+
 
 $_LANG['affiliate'] = '推荐设置';
 $_LANG['affiliate_ck'] = '分成管理';
@@ -342,4 +349,18 @@ $_LANG['brand_name_exist'] = '已存在相同的品牌名称!';
 
 $_LANG['alipay_login'] = '<a href="https://www.alipay.com/user/login.htm?goto=https%3A%2F%2Fwww.alipay.com%2Fhimalayas%2Fpracticality_profile_edit.htm%3Fmarket_type%3Dfrom_agent_contract%26customer_external_id%3D%2BC4335319945672464113" target="_blank">立即免费申请支付接口权限</a>';
 $_LANG['alipay_look'] = '<a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">请申请成功后登录支付宝账户查看</a>';
+
+
+
+$_LANG['04_sms_sign'] = '短信签名';
+
+/* 云服务中心 */
+$_LANG['certificate'] = '授权绑定';
+$_LANG['service_market'] = '服务市场';
+$_LANG['sms_resource'] = '短信平台';
+/*云起物流*/
+$_LANG['logistic_tracking'] = '云起物流';
+
+/* 移动版全民分销开通引导页 */
+$_LANG['lead'] = '移动版';
 ?>

@@ -75,6 +75,7 @@ $_LANG['back_page_up'] = '返回上一頁';
 $_LANG['back_account_log'] = '返回帳戶明細列表';
 $_LANG['amount_gt_zero'] = '請在「金額」欄輸入大於0的數字';
 $_LANG['select_payment_pls'] = '請選擇支付方式';
+$_LANG['check_account_money_fail'] = '修改的金額與充值金額不相等，不能進行修改';
 
 //JS語言項
 $_LANG['account_js']['surplus_amount_empty'] = '請輸入您要操作的金額數量！';
@@ -286,6 +287,9 @@ $_LANG['business_message'] = '發送/查看商家留言';
 $_LANG['pay_order_by_surplus'] = '追加使用餘額支付訂單：%s';
 $_LANG['return_surplus_on_cancel'] = '取消訂單 %s，退回支付訂單時使用的預付款';
 $_LANG['return_integral_on_cancel'] = '取消訂單 %s，退回支付訂單時使用的積分';
+$_LANG['repurchase'] = '再次購買';
+$_LANG['delivery_info'] = '查看物流';
+$_LANG['delivery_status'] = '查詢狀態';
 
 /* 訂單狀態 */
 $_LANG['os'][OS_UNCONFIRMED] = '未確認';
@@ -344,6 +348,7 @@ $_LANG['use_card'] = '使用賀卡';
 $_LANG['order_total_fee'] = '訂單總金額';
 $_LANG['order_money_paid'] = '已付款金額';
 $_LANG['order_amount'] = '應付款金額';
+$_LANG['order_refund'] = '應退款金額';
 $_LANG['accessories'] = '配件';
 $_LANG['largess'] = '贈品';
 $_LANG['use_more_surplus'] = '追加使用餘額';

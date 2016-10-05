@@ -133,6 +133,13 @@ if ($_REQUEST['step'] == 'add_to_cart')
     /* 更新：购物车 */
     else
     {
+        if(!empty($goods->spec))
+        {
+            foreach ($goods->spec as  $key=>$val )
+            {
+                $goods->spec[$key]=intval($val);
+            }
+        }
         // 更新：添加到购物车
         if (addto_cart($goods->goods_id, $goods->number, $goods->spec, $goods->parent))
         {
@@ -234,6 +241,7 @@ elseif ($_REQUEST['step'] == 'login')
                 }
             }
 
+            $_POST['password']=isset($_POST['password']) ? trim($_POST['password']) : '';
             if ($user->login($_POST['username'], $_POST['password'],isset($_POST['remember'])))
             {
                 update_user_info();  //更新用户信息
@@ -639,8 +647,13 @@ elseif ($_REQUEST['step'] == 'checkout')
                     }
                 }
             }
+            if($payment['pay_code']=='yunqi'){
+                $yunqi_payment = $payment_list[$key];
+                unset($payment_list[$key]);
+            }
         }
     }
+    $yunqi_payment and array_unshift($payment_list, $yunqi_payment);
     $smarty->assign('payment_list', $payment_list);
 
     /* 取得包装与贺卡 */
@@ -1388,6 +1401,7 @@ elseif ($_REQUEST['step'] == 'done')
         'need_insure'     => isset($_POST['need_insure']) ? intval($_POST['need_insure']) : 0,
         'user_id'         => $_SESSION['user_id'],
         'add_time'        => gmtime(),
+        'lastmodify'      => gmtime(),
         'order_status'    => OS_UNCONFIRMED,
         'shipping_status' => SS_UNSHIPPED,
         'pay_status'      => PS_UNPAYED,
@@ -1495,7 +1509,7 @@ elseif ($_REQUEST['step'] == 'done')
     }
     if(isset($is_real_good))
     {
-        $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1"; 
+        $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1";
         if(!$db->getOne($sql))
         {
            show_message($_LANG['flow_no_shipping']);
@@ -1658,15 +1672,29 @@ elseif ($_REQUEST['step'] == 'done')
         $sql = "UPDATE ". $ecs->table('goods_activity') ." SET is_finished='2' WHERE act_id=".$order['extension_id'];
         $db->query($sql);
     }
-
+    
     /* 处理余额、积分、红包 */
     if ($order['user_id'] > 0 && $order['surplus'] > 0)
     {
         log_account_change($order['user_id'], $order['surplus'] * (-1), 0, 0, 0, sprintf($_LANG['pay_order'], $order['order_sn']));
+        //订单支付后，创建订单到淘打
+        include_once("includes/cls_matrix.php");
+        $matrix = new matrix();
+        $bind_info = $matrix->get_bind_info(array('taodali'));
+        if($bind_info){
+            $matrix->createOrder($order['order_sn'],'taodali');
+        }
     }
     if ($order['user_id'] > 0 && $order['integral'] > 0)
     {
         log_account_change($order['user_id'], 0, 0, 0, $order['integral'] * (-1), sprintf($_LANG['pay_order'], $order['order_sn']));
+        //订单支付后，创建订单到淘打
+        include_once("includes/cls_matrix.php");
+        $matrix = new matrix();
+        $bind_info = $matrix->get_bind_info(array('taodali'));
+        if($bind_info){
+            $matrix->createOrder($order['order_sn'],'taodali');
+        }
     }
 
 
@@ -1768,9 +1796,26 @@ elseif ($_REQUEST['step'] == 'done')
         $payment = payment_info($order['pay_id']);
 
         include_once('includes/modules/payment/' . $payment['pay_code'] . '.php');
-
         $pay_obj    = new $payment['pay_code'];
+//为天宫支付传递商品名
+    $sql = "SELECT goods_name FROM " . $ecs->table('order_goods') . " WHERE order_id =" . $order['order_id'];
+    $res = $db->query($sql);
+    while ($aaa[] = $db->fetchRow($res))
+    {
+        $bbb = array_values($aaa);
+    }
+    foreach($bbb as $v)
+    {
+        $ccc[] = $v['goods_name'];
+    }
+    $goods_name = implode(',',$ccc);
+    $order['goods_name'] = $goods_name;
+//        error_log(print_r($goods_name,1)."\n~~~~",3,"/Users/roshan/www/ecshop/admin/ecshop.log");
 
+//天工结束
+
+        //云起收银
+        $payment['pay_code']='yunqi' and  $order['yunqi_paymethod'] = $_POST['yunqi_paymethod'];
         $pay_online = $pay_obj->get_code($order, unserialize_config($payment['pay_config']));
 
         $order['pay_desc'] = $payment['pay_desc'];
@@ -1788,10 +1833,23 @@ elseif ($_REQUEST['step'] == 'done')
     $smarty->assign('goods_list', $cart_goods);
     $smarty->assign('order_submit_back', sprintf($_LANG['order_submit_back'], $_LANG['back_home'], $_LANG['goto_user_center'])); // 返回提示
 
+    // 对接erp将订单推送到erp
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    $matrix = new matrix;
+    $matrix->createOrder($order['order_sn']);
+
     user_uc_call('add_feed', array($order['order_id'], BUY_GOODS)); //推送feed到uc
     unset($_SESSION['flow_consignee']); // 清除session中保存的收货人信息
     unset($_SESSION['flow_order']);
     unset($_SESSION['direct_shopping']);
+    // error_log(print_R($order,1)."\n",3,"/tmp/chen.log");
+    // echo "<pre>";print_r($order);exit();
+
+}
+elseif ($_REQUEST['step'] == 'chen') {
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    $matrix = new matrix;
+    $matrix->createOrder('2016042755957');
 }
 
 /*------------------------------------------------------ */
@@ -2077,10 +2135,30 @@ elseif ($_REQUEST['step'] == 'add_package_to_cart')
     $result['confirm_type'] = !empty($_CFG['cart_confirm']) ? $_CFG['cart_confirm'] : 2;
     die($json->encode($result));
 }
+elseif ($_REQUEST['step'] == 'repurchase') {
+    include_once('includes/cls_json.php');
+    $order_id = strip_tags($_POST['order_id']);
+    $order_id = json_str_iconv($order_id);
+    $db->query('DELETE FROM ' .$ecs->table('cart') . " WHERE rec_type = " . CART_REPURCHASE);
+    $order_goods = $db->getAll("SELECT goods_id, goods_number, goods_attr_id, parent_id FROM " . $ecs->table('order_goods') . " WHERE order_id = " . $order_id);
+    $result = array('error' => 0, 'message' => '');
+    $json  = new JSON;
+    foreach ($order_goods as $goods) {
+        $spec = empty($goods['goods_attr_id']) ? array() : explode(',', $goods['goods_attr_id']);
+        if (!addto_cart($goods['goods_id'], $goods['goods_number'], $spec, $goods['parent_id'], CART_REPURCHASE)) {
+            $result = false;
+            $result = array('error' => 1, 'message' => $_LANG['repurchase_fail']);
+        }
+    }
+    die($json->encode($result));
+}
 else
 {
+    $flow_type = isset($_REQUEST['type']) ? $_REQUEST['type'] : CART_GENERAL_GOODS;
+    $flow_type = strip_tags($flow_type);
+    $flow_type = json_str_iconv($flow_type);
     /* 标记购物流程为普通商品 */
-    $_SESSION['flow_type'] = CART_GENERAL_GOODS;
+    $_SESSION['flow_type'] = $flow_type;
 
     /* 如果是一步购物，跳到结算中心 */
     if ($_CFG['one_step_buy'] == '1')
@@ -2090,7 +2168,7 @@ else
     }
 
     /* 取得商品列表，计算合计 */
-    $cart_goods = get_cart_goods();
+    $cart_goods = get_cart_goods($flow_type);
     $smarty->assign('goods_list', $cart_goods['goods_list']);
     $smarty->assign('total', $cart_goods['total']);
 
@@ -2130,7 +2208,7 @@ else
     $sql = "SELECT goods_id " .
             "FROM " . $GLOBALS['ecs']->table('cart') .
             " WHERE session_id = '" . SESS_ID . "' " .
-            "AND rec_type = '" . CART_GENERAL_GOODS . "' " .
+            "AND rec_type = '" . $flow_type . "' " .
             "AND is_gift = 0 " .
             "AND extension_code <> 'package_buy' " .
             "AND parent_id = 0 ";

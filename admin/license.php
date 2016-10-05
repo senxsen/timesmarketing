@@ -10,7 +10,7 @@
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ==========================================================
  * $Author: wangleisvn $
- * $Id: flashplay.php 16131 2009-05-31 08:21:41Z wangleisvn $
+ * $Id: license.php 16131 2009-05-31 08:21:41Z wangleisvn $
  */
 
 define('IN_ECS', true);

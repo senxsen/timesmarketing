@@ -35,7 +35,7 @@ array('login','act_login','register','act_register','act_edit_password','get_pas
 /* 显示页面的action列表 */
 $ui_arr = array('register', 'login', 'profile', 'order_list', 'order_detail', 'address_list', 'collection_list',
 'message_list', 'tag_list', 'get_password', 'reset_password', 'booking_list', 'add_booking', 'account_raply',
-'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy', 'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points','qpassword_name', 'get_passwd_question', 'check_answer');
+'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy', 'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points','qpassword_name', 'get_passwd_question', 'check_answer','delivery_info');
 
 /* 未登录处理 */
 if (empty($_SESSION['user_id']))
@@ -89,7 +89,6 @@ if (in_array($action, $ui_arr))
     $smarty->assign('action',     $action);
     $smarty->assign('lang',       $_LANG);
 }
-
 //用户中心欢迎页
 if ($action == 'default')
 {
@@ -806,6 +805,11 @@ elseif ($action == 'order_list')
     $orders = get_user_orders($user_id, $pager['size'], $pager['start']);
     $merge  = get_user_merge($user_id);
 
+    include_once(ROOT_PATH . 'includes/cls_certificate.php');
+    $cert = new certificate();
+    $cert->is_bind_sn('erp','goods_name')?$smarty->assign('no_bind_erp',  0):$smarty->assign('no_bind_erp',  1);
+
+    $smarty->assign('open_logistics_trace',is_open_logistics_trace());
     $smarty->assign('merge',  $merge);
     $smarty->assign('pager',  $pager);
     $smarty->assign('orders', $orders);
@@ -884,11 +888,100 @@ elseif ($action == 'order_detail')
     $order['order_status'] = $_LANG['os'][$order['order_status']];
     $order['pay_status'] = $_LANG['ps'][$order['pay_status']];
     $order['shipping_status'] = $_LANG['ss'][$order['shipping_status']];
-
     $smarty->assign('order',      $order);
     $smarty->assign('goods_list', $goods_list);
     $smarty->display('user_transaction.dwt');
 }
+
+elseif($action=='get_yunqi_online'){
+    $order_id = $_POST['order_id'];
+    if(!$order_id){
+        echo json_encode(array('status'=>false,'msg'=>'入参错误'));exit;
+    }
+    include_once(ROOT_PATH.'includes/lib_clips.php');
+    include_once(ROOT_PATH.'includes/lib_payment.php');
+    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+    /* 订单详情 */
+    $order = get_order_detail($order_id, $_SESSION['user_id']);
+    //支付方式信息
+    $payment_info = array();
+    $payment_info = payment_info($order['pay_id']);
+    $order['yunqi_paymethod'] = $_POST['yunqi_paymethod']?$_POST['yunqi_paymethod']:'alipay';
+    
+    if (!empty($payment_info))
+    {
+        /* 调用相应的支付方式文件 */
+        include_once(ROOT_PATH . 'includes/modules/payment/yunqi.php');
+        /* 取得在线支付方式的支付按钮 */
+        $pay_obj    = new $payment_info['pay_code'];
+        $pay_online = $pay_obj->get_code($order, array());
+        echo json_encode(array('status'=>true,'pay_online'=>$pay_online));exit;
+    }else{
+        echo json_encode(array('status'=>false,'msg'=>'支付方式为空'));exit;
+    }
+}
+
+elseif($action=='get_yunqi_online_balance'){
+    //变量初始化
+    $surplus_id = isset($_POST['rec_id'])  ? intval($_POST['rec_id'])  : 0;
+    $payment_id = isset($_POST['pid']) ? intval($_POST['pid']) : 0;
+    if(!$surplus_id || !$payment_id){
+        echo json_encode(array('status'=>false,'msg'=>'入参错误'));exit;
+    }
+    include_once(ROOT_PATH.'includes/lib_clips.php');
+    include_once(ROOT_PATH.'includes/lib_payment.php');
+    include_once(ROOT_PATH.'includes/lib_order.php');
+    include_once(ROOT_PATH . 'includes/lib_transaction.php');
+    //获取单条会员帐目信息
+    $order = array();
+    $order = get_surplus_info($surplus_id);
+    
+    //支付方式的信息
+    $payment_info = array();
+    $payment_info = payment_info($payment_id);
+    $order['yunqi_paymethod'] = $_POST['yunqi_paymethod']?$_POST['yunqi_paymethod']:'alipay';
+    /* 如果当前支付方式没有被禁用，进行支付的操作 */
+    if (!empty($payment_info))
+    {
+        //取得支付信息，生成支付代码
+        $payment = unserialize_config($payment_info['pay_config']);
+
+        //生成伪订单号
+        $order['order_sn'] = $surplus_id;
+
+        //获取需要支付的log_id
+        $order['log_id'] = get_paylog_id($surplus_id, $pay_type = PAY_SURPLUS);
+
+        $order['user_name']      = $_SESSION['user_name'];
+        $order['surplus_amount'] = $order['amount'];
+
+        //计算支付手续费用
+        $payment_info['pay_fee'] = pay_fee($payment_id, $order['surplus_amount'], 0);
+
+        //计算此次预付款需要支付的总金额
+        $order['order_amount']   = $order['surplus_amount'] + $payment_info['pay_fee'];
+
+        //如果支付费用改变了，也要相应的更改pay_log表的order_amount
+        $order_amount = $db->getOne("SELECT order_amount FROM " .$ecs->table('pay_log')." WHERE log_id = '$order[log_id]'");
+        if ($order_amount <> $order['order_amount'])
+        {
+            $db->query("UPDATE " .$ecs->table('pay_log').
+                       " SET order_amount = '$order[order_amount]' WHERE log_id = '$order[log_id]'");
+        }
+
+        /* 调用相应的支付方式文件 */
+        include_once(ROOT_PATH . 'includes/modules/payment/' . $payment_info['pay_code'] . '.php');
+
+        /* 取得在线支付方式的支付按钮 */
+        $pay_obj = new $payment_info['pay_code'];
+        $pay_online = $pay_obj->get_code($order, $payment);
+        echo json_encode(array('status'=>true,'pay_online'=>$pay_online));exit;
+
+    }else{
+        echo json_encode(array('status'=>false,'msg'=>'支付方式为空'));exit;
+    }
+}
+
 
 /* 取消订单 */
 elseif ($action == 'cancel_order')
@@ -900,6 +993,11 @@ elseif ($action == 'cancel_order')
 
     if (cancel_order($order_id, $user_id))
     {
+        // 通知erp取消订单
+        include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        $matrix = new matrix();
+        $matrix->set_dead_order($order_id);
+
         ecs_header("Location: user.php?act=order_list\n");
         exit;
     }
@@ -1148,6 +1246,12 @@ elseif ($action == 'act_add_message')
 
     if (add_message($message))
     {
+        // 通知erp订单留言
+        // if (isset($_POST['order_id']) && $_POST['order_id']) {
+        //     include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        //     $matrix = new matrix();
+        //     $matrix->update_order_buyer_message($message);
+        // }
         show_message($_LANG['add_message_success'], $_LANG['message_list_lnk'], 'user.php?act=message_list&order_id=' . $message['order_id'],'info');
     }
     else
@@ -1430,7 +1534,8 @@ elseif ($action == 'act_account')
             'process_type' => isset($_POST['surplus_type']) ? intval($_POST['surplus_type']) : 0,
             'payment_id'   => isset($_POST['payment_id'])   ? intval($_POST['payment_id'])   : 0,
             'user_note'    => isset($_POST['user_note'])    ? trim($_POST['user_note'])      : '',
-            'amount'       => $amount
+            'amount'       => $amount,
+            'yunqi_paymethod'=>isset($_POST['yunqi_paymethod'])?$_POST['yunqi_paymethod']:'alipay',
     );
 
     /* 退款申请的处理 */
@@ -1478,6 +1583,10 @@ elseif ($action == 'act_account')
 
         if ($surplus['rec_id'] > 0)
         {
+            //检查金额是否有改变，如果有改变，不可以修改
+            if(!check_account_money($surplus['rec_id'],$user_id,$amount)){
+                show_message($_LANG['check_account_money_fail']);
+            }
             //更新会员账目明细
             $surplus['rec_id'] = update_user_account($surplus);
         }
@@ -1495,6 +1604,7 @@ elseif ($action == 'act_account')
         $order['order_sn']       = $surplus['rec_id'];
         $order['user_name']      = $_SESSION['user_name'];
         $order['surplus_amount'] = $amount;
+        $order['process_type'] = 0;
 
         //计算支付手续费用
         $payment_info['pay_fee'] = pay_fee($surplus['payment_id'], $order['surplus_amount'], 0);
@@ -1504,7 +1614,7 @@ elseif ($action == 'act_account')
 
         //记录支付log
         $order['log_id'] = insert_pay_log($surplus['rec_id'], $order['order_amount'], $type=PAY_SURPLUS, 0);
-
+        $order['yunqi_paymethod'] = $surplus['yunqi_paymethod'];
         /* 调用相应的支付方式文件 */
         include_once(ROOT_PATH . 'includes/modules/payment/' . $payment_info['pay_code'] . '.php');
 
@@ -1938,6 +2048,18 @@ elseif ($action == 'act_edit_surplus')
     $change_desc = sprintf($_LANG['pay_order_by_surplus'], $order['order_sn']);
     log_account_change($user['user_id'], (-1) * $surplus, 0, 0, 0, $change_desc);
 
+    // 更新pay_log表
+    if ($order['order_amount']>0) {
+        $GLOBALS['db']->query("UPDATE ".$GLOBALS['ecs']->table('pay_log')." SET order_amount='".$order['order_amount']."' WHERE order_id='".$order_id."' AND order_type=0 and is_paid=0");
+    }elseif ($order['order_amount'] == 0) {
+        $GLOBALS['db']->query("UPDATE ".$GLOBALS['ecs']->table('pay_log')." SET order_amount='".$order['order_amount']."',is_paid=1 WHERE order_id='".$order_id."' AND order_type=0 and is_paid=0");
+    }
+
+    // 支付后通知erp
+    include_once(ROOT_PATH . 'includes/cls_matrix.php');
+    $matrix = new matrix;
+    $matrix->createOrder($order['order_sn']);
+
     /* 跳转 */
     ecs_header('Location: user.php?act=order_detail&order_id=' . $order_id . "\n");
     exit;
@@ -2031,6 +2153,15 @@ elseif ($action == 'save_order_address')
         );
     if (save_order_address($address, $user_id))
     {
+        $order_sn = $db->getOne("SELECT order_sn FROM ".$ecs->table('order_info')." WHERE order_id='{$address['order_id']}'");
+        if ($order_sn) {
+            $sql = "UPDATE " . $ecs->table('order_info') .
+           " SET lastmodify=".gmtime()."  WHERE order_id = ".$address['order_id'];
+            $db->query($sql);
+            include_once(ROOT_PATH . 'includes/cls_matrix.php');
+            $matrix = new matrix;
+            $matrix->createOrder($order_sn);
+        }
         ecs_header('Location: user.php?act=order_detail&order_id=' .$address['order_id']. "\n");
         exit;
     }
@@ -2424,26 +2555,12 @@ else if ($action == 'track_packages')
     $sql = "SELECT order_id,order_sn,invoice_no,shipping_id FROM " .$ecs->table('order_info').
             " WHERE user_id = '$user_id' AND shipping_status = '" . SS_SHIPPED . "'";
     $res = $db->query($sql);
+
     $record_count = 0;
     while ($item = $db->fetch_array($res))
     {
-        $shipping   = get_shipping_object($item['shipping_id']);
-
-        if (method_exists ($shipping, 'query'))
-        {
-            $query_link = $shipping->query($item['invoice_no']);
-        }
-        else
-        {
-            $query_link = $item['invoice_no'];
-        }
-
-        if ($query_link != $item['invoice_no'])
-        {
-            $item['query_link'] = $query_link;
-            $orders[]  = $item;
-            $record_count += 1;
-        }
+        $orders[]  = $item;
+        $record_count += 1;
     }
     $pager  = get_pager('user.php', array('act' => $action), $record_count, $page);
     $smarty->assign('pager',  $pager);
@@ -2753,4 +2870,62 @@ elseif ($action == 'clear_history')
 {
     setcookie('ECS[history]',   '', 1);
 }
+/* 物流信息 */
+elseif ($action == 'delivery_info'){
+    $_GET['order_sn'] = trim($_GET['order_sn']);
+    $order_sn = empty($_GET['order_sn']) ? '' : addslashes($_GET['order_sn']);
+
+    if (empty($order_sn))
+    {
+        show_message($_LANG['invalid_order_sn'], '', 'user.php?act=order_list');
+    }
+
+    $sql = "SELECT order_id ".
+           " FROM " . $ecs->table('order_info').
+           " WHERE order_sn = '$order_sn' and user_id = ".$_SESSION['user_id']." and shipping_status = ".SS_SHIPPED." LIMIT 1";
+    $row = $db->getRow($sql);
+    if (empty($row))
+    {
+        show_message($_LANG['invalid_order_sn'], '', 'user.php?act=order_list');
+    }
+    include_once(ROOT_PATH . 'includes/lib_order.php');
+    $smarty->assign('logistics_info', get_logistics_trace($order_sn, 0, $_CFG['lang']));
+    $smarty->display('delivery_info.dwt');
+}
+/* ajax 物流信息 */
+elseif ($action == 'ajax_delivery_info') {
+    include_once('includes/cls_json.php');
+    $json = new JSON;
+
+    $_POST['order_sn'] = trim($_POST['order_sn']);
+    $order_sn = empty($_POST['order_sn']) ? '' : addslashes($_POST['order_sn']);
+
+    $result = array('error'=>0, 'message'=>'', 'content'=>'', 'order_sn'=>$order_sn);
+
+    if (empty($order_sn))
+    {
+        $result['error'] = 1;
+        $result['message'] = $_LANG['invalid_order_sn'];
+        die($json->encode($result));
+    }
+
+    $sql = "SELECT order_sn,shipping_name,invoice_no ".
+           " FROM " . $ecs->table('order_info').
+           " WHERE order_sn = '$order_sn' and user_id = ".$_SESSION['user_id']." and shipping_status = ".SS_SHIPPED." LIMIT 1";
+    $row = $db->getRow($sql);
+    if (empty($row))
+    {
+        $result['error'] = 1;
+        $result['message'] = $_LANG['invalid_order_sn'];
+        die($json->encode($result));
+    }
+    include_once(ROOT_PATH . 'includes/lib_order.php');
+    $smarty->assign('order_info',    $row);
+    $smarty->assign('logistics_info', get_logistics_trace($order_sn, 2, $_CFG['lang']));
+    $result['content'] = $smarty->fetch('library/delivery_info.lbi');
+
+    die($json->encode($result));
+
+}
+
 ?>

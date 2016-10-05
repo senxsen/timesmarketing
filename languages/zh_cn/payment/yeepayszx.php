@@ -20,5 +20,5 @@ $_LANG['ypszx_desc']    = 'YeePay易宝神州行支付是只要是中国移动�
         '<input type="button" name="Submit" value="立即注册" onclick="window.open(\'https://www.yeepay.com/selfservice/AgentService.action?p0_Cmd=AgentRegister&p1_MerId=10000383855&hmac=bd9e7b0f85bddedb105eebb136632772\')" />';
 $_LANG['yp_account'] = '商户编号';
 $_LANG['yp_key']     = '商户密钥';
-$_LANG['pay_button'] = '立即使用YeePay易宝支付';
+$_LANG['pay_button'] = '立即支付';
 ?>

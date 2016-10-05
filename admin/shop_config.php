@@ -29,7 +29,7 @@ else
 
 $sess_id = $GLOBALS['sess']->get_session_id();
 
-$auth = mktime();
+$auth = time();
 $ac = md5($certi_id.'SHOPEX_SMS'.$auth);
 $url = 'http://service.shopex.cn/sms/index.php?certificate_id='.$certi_id.'&sess_id='.$sess_id.'&auth='.$auth.'&ac='.$ac;
 
@@ -79,6 +79,23 @@ if ($_REQUEST['act'] == 'list_edit')
     $smarty->assign('cfg', $_CFG);
 
     assign_query_info();
+    
+    $demo_data['mobile'] = '13812345678';
+    $demo_data['name']   = '张三';
+    $demo_data['order_sn'] = '12345678978945';
+    $demo_data['order_amount'] = '65.00';
+    $demo_data['delivery_time'] = '4月30号';
+    $demo_data['sms_sign'] = $GLOBALS['_CFG']['shop_name'];
+    foreach ($demo_data as $k=>$v) $demo_data[$k] = sprintf("<font color='red'>%s</font>",$v);
+    require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/common.php');
+    require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/shopping_flow.php');
+    require_once(ROOT_PATH . 'languages/' .$_CFG['lang']. '/admin/order.php');
+    $demo_sms_info['sms_order_placed'] = sprintf($_LANG['order_placed_sms'], $demo_data['name'], $demo_data['mobile']);
+    $demo_sms_info['sms_order_payed'] = sprintf($_LANG['order_payed_sms'], $demo_data['order_sn'], $demo_data['name'], $demo_data['mobile']);
+    $demo_sms_info['sms_order_payed_to_customer'] = sprintf($_LANG['order_payed_to_customer_sms'], $demo_data['order_sn'], $demo_data['order_amount']);
+    $demo_sms_info['sms_order_shipped'] = sprintf($_LANG['order_shipped_sms'], $demo_data['order_sn'],
+                $demo_data['delivery_time'], $demo_data['sms_sign']);
+    $smarty->assign('demo_sms_info',$demo_sms_info);
     $smarty->display('shop_config.htm');
 }
 
@@ -131,6 +148,15 @@ elseif ($_REQUEST['act'] == 'post')
         }
     }
 
+    if( isset($_POST['value']['247']) and $_POST['value']['247'] ){
+        include_once(ROOT_PATH . 'includes/cls_certificate.php');
+        $cert = new certificate();
+        if( false == $cert->open_logistics_trace() ){
+            $links[] = array('text' => $_LANG['back_shop_config'], 'href' => 'shop_config.php?act=list_edit');
+            sys_msg($_LANG['open_logistics_trace_fail'], 0, $links);
+        }
+    }
+
     /* 处理上传文件 */
     $file_var_list = array();
     $sql = "SELECT * FROM " . $ecs->table('shop_config') . " WHERE parent_id > 0 AND type = 'file'";
@@ -161,7 +187,8 @@ elseif ($_REQUEST['act'] == 'post')
                 }
                 elseif ($code == 'watermark')
                 {
-                    $ext = array_pop(explode('.', $file['name']));
+					$file_name_arr = explode('.', $file['name']);
+                    $ext = array_pop($file_name_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'watermark.' . $ext;
                     if (file_exists($file_var_list[$code]['value']))
                     {
@@ -170,7 +197,8 @@ elseif ($_REQUEST['act'] == 'post')
                 }
                 elseif($code == 'wap_logo')
                 {
-                    $ext = array_pop(explode('.', $file['name']));
+					$file_name_arr = explode('.', $file['name']);
+                    $ext = array_pop($file_name_arr);
                     $file_name = $file_var_list[$code]['store_dir'] . 'wap_logo.' . $ext;
                     if (file_exists($file_var_list[$code]['value']))
                     {

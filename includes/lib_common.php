@@ -212,7 +212,7 @@ function get_shipping_config($area_id)
  * @access  public
  * @return  object
  */
-function &init_users()
+function init_users()
 {
     $set_modules = false;
     static $cls = null;
@@ -1881,6 +1881,33 @@ function log_account_change($user_id, $user_money = 0, $frozen_money = 0, $rank_
 
 
 /**
+ * 记录非预存款支付变动
+ * @param   int     $user_id        用户id
+ * @param   int     $order_id       order_id
+ * @param   string  $order_sn       order_sn
+ * @param   float   $money          支付金额
+ * @param   string  $pay_type       支付类型
+ * @param   string  $pay_time       支付时间
+ * @param   string  $change_desc    变动说明
+ * @return  void
+ */
+function log_account_other_change($user_id, $order_id, $order_sn, $money = 0, $pay_type = '', $pay_time = '', $change_desc = '')
+{
+    /* 插入帐户变动记录 */
+    $account_other_log = array(
+        'user_id'       =>  $user_id,
+        'order_id'      =>  $order_id,
+        'order_sn'      =>  $order_sn,
+        'money'         =>  $money,
+        'pay_type'      =>  $pay_type,
+        'pay_time'      =>  $pay_time ? $pay_time : gmtime(),
+        'change_desc'   =>  $change_desc
+    );
+    $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('account_other_log'), $account_other_log, 'INSERT');
+}
+
+
+/**
  * 获得指定分类下的子分类的数组
  *
  * @access  public
@@ -2778,5 +2805,59 @@ if (!function_exists('array_combine')) {
         return $combined;
     }
 }
+
+/**
+ * 获取云起短信和物流token
+ * @return  string      token
+ */
+function get_yunqi_code(){
+    return get_certificate_info('yunqi_code');
+}
+
+/**
+ * 删除云起短信和物流token
+ * @return  string      token
+ */
+function delete_yunqi_code(){
+    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='certificate'";
+    $row = $GLOBALS['db']->getOne($sql);
+    if(!$row) return false;
+    $certificate = unserialize($row);
+    unset($certificate['yunqi_code']);
+    $update_sql = "update ".$GLOBALS['ecs']->table('shop_config')." set value='".serialize($certificate)."' where code='certificate'";
+    return $GLOBALS['db']->query($update_sql);
+}
+
+/**
+ * 获取云起证书信息
+ * @param   string  $key
+ * @return  string   
+ */
+function get_certificate_info($key,$code='certificate'){
+    $sql = "select value from ".$GLOBALS['ecs']->table('shop_config')." where code='".$code."'";
+    $row = $GLOBALS['db']->getOne($sql);
+    if(!$row) return false;
+    $certificate = unserialize($row);
+    return isset($certificate[$key])?$certificate[$key]:false;
+}
+
+/**
+ * 获取iframe签名
+ * @param   string  $product
+ * @return  string   
+ */
+function iframe_source_encode($product)
+{
+    $source[] = base64_encode($product); 
+    $source[] = get_certificate_info("passport_uid");
+    $source[] = get_certificate_info("yunqi_code");
+    $source[] = time();
+    $source[] = urlencode($GLOBALS['ecs']->url());
+    return base64_encode(implode('|',$source));
+}
+
+
+
+
 
 ?>

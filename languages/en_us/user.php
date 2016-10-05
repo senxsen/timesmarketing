@@ -75,6 +75,7 @@ $_LANG['back_page_up'] = 'Previous';
 $_LANG['back_account_log'] = 'Back to account details list';
 $_LANG['amount_gt_zero'] = 'Enter numbers bigger than zero in Amount';
 $_LANG['select_payment_pls'] = 'Select payment mode';
+$_LANG['check_account_money_fail'] = 'The amount of change is not equal to the amount of the amount of charge, and cannot be modified';
 
 //JS语言项
 $_LANG['account_js']['surplus_amount_empty'] = 'Please enter a money amount!';
@@ -286,6 +287,9 @@ $_LANG['business_message'] = 'Send/view business message';
 $_LANG['pay_order_by_surplus'] = 'Pay order by balance:%s';
 $_LANG['return_surplus_on_cancel'] = 'Cancel order %s,return advancedly payed balance for order';
 $_LANG['return_integral_on_cancel'] = 'Cancel order %s,return points payed for order';
+$_LANG['repurchase'] = 'Buy again';
+$_LANG['delivery_info'] = 'delivery info';
+$_LANG['delivery_status'] = 'delivery status';
 
 /* 订单状态 */
 $_LANG['os'][OS_UNCONFIRMED] = 'Unconfirmed';
@@ -344,6 +348,7 @@ $_LANG['use_card'] = 'Card';
 $_LANG['order_total_fee'] = 'Total money';
 $_LANG['order_money_paid'] = 'Paid money';
 $_LANG['order_amount'] = 'Payable money';
+$_LANG['order_refund'] = 'Should be back money';
 $_LANG['accessories'] = 'Payable money';
 $_LANG['largess'] = 'Gift';
 $_LANG['use_more_surplus'] = 'Use Balance';

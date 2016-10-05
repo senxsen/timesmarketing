@@ -6,23 +6,23 @@
 </ul>
 <script type="Text/Javascript" language="JavaScript">
 <!--
-  Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
-    function cloud_api(result)
-    {
-      //alert(result.content);
-      if(result.content=='0')
-      {
-        document.getElementById("cloud_list").style.display ='none';
-      }
-      else
-       {
-         document.getElementById("cloud_list").innerHTML =result.content;
-      }
-    } 
-   function cloud_close(id)
-    {
-      Ajax.call('cloud.php?is_ajax=1&act=close_remind&remind_id='+id,'', cloud_api, 'GET', 'JSON');
-    }
+  // Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
+    // function cloud_api(result)
+    // {
+    //   //alert(result.content);
+    //   if(result.content=='0')
+    //   {
+    //     document.getElementById("cloud_list").style.display ='none';
+    //   }
+    //   else
+    //    {
+    //      document.getElementById("cloud_list").innerHTML =result.content;
+    //   }
+    // } 
+   // function cloud_close(id)
+   //  {
+   //    Ajax.call('cloud.php?is_ajax=1&act=close_remind&remind_id='+id,'', cloud_api, 'GET', 'JSON');
+   //  }
   //-->
  </script> 
 <ul id="lilist" style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
@@ -34,6 +34,15 @@
  <!-- <script type="text/javascript" src="http://bbs.ecshop.com/notice.php?v=1&n=8&f=ul"></script>-->
 </ul>
 <!-- directory install end -->
+<!-- banner area-->
+<div class="ban-area">
+  <div class="inn">
+    <iframe class="first" width="450" height="300" src="{$pmp_desktop}" frameborder="0" scrolling="no"></iframe>
+    <iframe width="450" height="300" src="{$pmp_market}" frameborder="0" scrolling="no"></iframe>
+  </div>
+</div>
+<!-- banner area-->
+
 <!-- start personal message -->
 {if $admin_msg}
 <div class="list-div" style="border: 1px solid #CC0000">
@@ -222,6 +231,7 @@
   </tr>
 </table>
 </div>
+
 {literal}
 {insert_scripts files="../js/utils.js"}
 <script type="Text/Javascript" language="JavaScript">
@@ -231,23 +241,23 @@ onload = function()
   /* 检查订单 */
   startCheckOrder();
 }
-  Ajax.call('index.php?is_ajax=1&act=main_api','', start_api, 'GET', 'TEXT','FLASE');
+  // Ajax.call('index.php?is_ajax=1&act=main_api','', start_api, 'GET', 'TEXT','FLASE');
   //Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
-   function start_api(result)
-    {
-      apilist = document.getElementById("lilist").innerHTML;
-      document.getElementById("lilist").innerHTML =result+apilist;
-      if(document.getElementById("Marquee") != null)
-      {
-        var Mar = document.getElementById("Marquee");
-        lis = Mar.getElementsByTagName('div');
-        //alert(lis.length); //显示li元素的个数
-        if(lis.length>1)
-        {
-          api_styel();
-        }      
-      }
-    }
+   // function start_api(result)
+   //  {
+   //    apilist = document.getElementById("lilist").innerHTML;
+   //    document.getElementById("lilist").innerHTML =result+apilist;
+   //    if(document.getElementById("Marquee") != null)
+   //    {
+   //      var Mar = document.getElementById("Marquee");
+   //      lis = Mar.getElementsByTagName('div');
+   //      //alert(lis.length); //显示li元素的个数
+   //      if(lis.length>1)
+   //      {
+   //        api_styel();
+   //      }      
+   //    }
+   //  }
  
       function api_styel()
       {

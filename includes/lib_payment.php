@@ -108,10 +108,17 @@ function get_goods_name_by_id($order_id)
  */
 function check_money($log_id, $money)
 {
-    $sql = 'SELECT order_amount FROM ' . $GLOBALS['ecs']->table('pay_log') .
+    if(is_numeric($log_id))
+    {
+        $sql = 'SELECT order_amount FROM ' . $GLOBALS['ecs']->table('pay_log') .
               " WHERE log_id = '$log_id'";
-    $amount = $GLOBALS['db']->getOne($sql);
-
+        // $sql = "SELECT o.order_amount FROM ".$GLOBALS['ecs']->table('order_info')." as o left join ".$GLOBALS['ecs']->table('pay_log')." as p on o.order_id=p.order_id WHERE p.log_id = '".$log_id."'";
+        $amount = $GLOBALS['db']->getOne($sql);
+    }
+    else
+    {
+        return false;
+    }
     if ($money == $amount)
     {
         return true;
@@ -133,6 +140,7 @@ function check_money($log_id, $money)
  */
 function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 {
+    error_log(date("c")."\t".'log_id:'.$log_id.";pay_status:".$pay_status.";\n\n",3,LOG_DIR."/pay_status.log");
     /* 取得支付编号 */
     $log_id = intval($log_id);
     if ($log_id > 0)
@@ -152,7 +160,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
             if ($pay_log['order_type'] == PAY_ORDER)
             {
                 /* 取得订单信息 */
-                $sql = 'SELECT order_id, user_id, order_sn, consignee, address, tel, shipping_id, extension_code, extension_id, goods_amount ' .
+                $sql = 'SELECT order_id, user_id, order_sn, consignee, address, tel, shipping_id, extension_code, extension_id, goods_amount, order_amount, pay_id ' .
                         'FROM ' . $GLOBALS['ecs']->table('order_info') .
                        " WHERE order_id = '$pay_log[order_id]'";
                 $order    = $GLOBALS['db']->getRow($sql);
@@ -166,7 +174,8 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                                 " pay_status = '$pay_status', " .
                                 " pay_time = '".gmtime()."', " .
                                 " money_paid = order_amount," .
-                                " order_amount = 0 ".
+                                " order_amount = 0, ".
+                                " lastmodify = '".gmtime()."' ".
                        "WHERE order_id = '$order_id'";
                 $GLOBALS['db']->query($sql);
 
@@ -174,13 +183,17 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                 order_action($order_sn, OS_CONFIRMED, SS_UNSHIPPED, $pay_status, $note, $GLOBALS['_LANG']['buyer']);
 
                 /* 如果需要，发短信 */
-                if ($GLOBALS['_CFG']['sms_order_payed'] == '1' && $GLOBALS['_CFG']['sms_shop_mobile'] != '')
+                if ( $GLOBALS['_CFG']['sms_shop_mobile'] != '' )
                 {
                     include_once(ROOT_PATH.'includes/cls_sms.php');
                     $sms = new sms();
-                    $sms->send($GLOBALS['_CFG']['sms_shop_mobile'],
+                    if ( $GLOBALS['_CFG']['sms_order_payed'] == '1' ) $sms->send($GLOBALS['_CFG']['sms_shop_mobile'],
                         sprintf($GLOBALS['_LANG']['order_payed_sms'], $order_sn, $order['consignee'], $order['tel']),'', 13,1);
+
+                    if ( $GLOBALS['_CFG']['sms_order_payed_to_customer'] == '1' ) $sms->send($GLOBALS['_CFG']['sms_shop_mobile'],
+                        sprintf($GLOBALS['_LANG']['order_payed_to_customer_sms'], $order_sn, $order['order_amount']),'', 13,1);
                 }
+
 
                 /* 对虚拟商品的支持 */
                 $virtual_goods = get_virtual_goods($order_id);
@@ -205,9 +218,30 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                         order_action($order_sn, OS_CONFIRMED, SS_SHIPPED, $pay_status, $note, $GLOBALS['_LANG']['buyer']);
                         $integral = integral_to_give($order);
                         log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['order_gift_integral'], $order['order_sn']));
+                    }else{
+                        $pay_code = $GLOBALS['db']->getOne("SELECT pay_code FROM ".$GLOBALS['ecs']->table('payment')." WHERE pay_id='".$order['pay_id']."'");
+                        $pay_code || $pay_code = '';
+                        log_account_other_change($order['user_id'], $order['order_id'], $order['order_sn'], $order['order_amount'], $pay_code, gmtime());
                     }
+                }else{
+                    $pay_code = $GLOBALS['db']->getOne("SELECT pay_code FROM ".$GLOBALS['ecs']->table('payment')." WHERE pay_id='".$order['pay_id']."'");
+                    $pay_code || $pay_code = '';
+                    log_account_other_change($order['user_id'], $order['order_id'], $order['order_sn'], $order['order_amount'], $pay_code, gmtime());
                 }
 
+                //订单支付后，创建订单到淘打
+                include_once("includes/cls_matrix.php");
+                $matrix = new matrix();
+                $bind_info = $matrix->get_bind_info(array('taodali'));
+                if($bind_info){
+                    $matrix->createOrder($order['order_sn'],'taodali');
+                }
+                //end
+                // 请求erp
+                $bind_info = $matrix->get_bind_info(array('ecos.ome'));
+                if($bind_info){
+                    $matrix->createOrder($order['order_sn']);
+                }
             }
             elseif ($pay_log['order_type'] == PAY_SURPLUS)
             {
@@ -230,6 +264,23 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                     $_LANG = array();
                     include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
                     log_account_change($arr['user_id'], $arr['amount'], 0, 0, 0, $_LANG['surplus_type_0'], ACT_SAVING);
+
+                    $order = $GLOBALS['db']->getRow("select order_sn FROM ".$GLOBALS['ecs']->table('order_info')." WHERE order_id=".$pay_log['order_id']);
+                    if (isset($order['order_sn']) && $order['order_sn']) {
+                    //订单支付后，创建订单到淘打
+                    include_once("includes/cls_matrix.php");
+                    $matrix = new matrix();
+                    $bind_info = $matrix->get_bind_info(array('taodali'));
+                    if($bind_info){
+                        $matrix->createOrder($order['order_sn'],'taodali');
+                    }
+                    //end
+                    // 请求erp
+                    $bind_info = $matrix->get_bind_info(array('ecos.ome'));
+                    if($bind_info){
+                        $matrix->createOrder($order['order_sn']);
+                    }
+                    }
                 }
             }
         }

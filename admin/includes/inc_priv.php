@@ -75,7 +75,7 @@ if (!defined('IN_ECS'))
 
 //商店设置权限
     $purview['01_shop_config']       = 'shop_config';
-    $purview['shop_authorized']       = 'shop_authorized';
+    // $purview['shop_authorized']       = 'shop_authorized';
     $purview['shp_webcollect']            = 'webcollect_manage';
     $purview['02_payment_list']      = 'payment';
     $purview['03_shipping_list']     = array('ship_manage','shiparea_manage');
@@ -132,6 +132,7 @@ if (!defined('IN_ECS'))
     $purview['03_db_optimize']       = 'db_optimize';
     $purview['04_sql_query']         = 'sql_query';
     $purview['convert']              = 'convert';
+    $purview['clear']                = 'clear';
 
 //短信管理
     $purview['02_sms_my_info']       = 'my_info';
@@ -149,5 +150,6 @@ if (!defined('IN_ECS'))
     $purview['email_list']           = 'email_list';
     $purview['magazine_list']        = 'magazine_list';
     $purview['view_sendlist']        = 'view_sendlist';
+
 
 ?>

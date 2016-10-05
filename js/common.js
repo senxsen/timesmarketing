@@ -35,6 +35,21 @@ function addToCart(goodsId, parentId)
 }
 
 /**
+ * 再次购买
+ */
+function repurchase(order_id) {
+  var cart_url = 'flow.php?step=cart&type=5';
+  Ajax.call('flow.php?step=repurchase', 'order_id=' + order_id, function(data){
+    if (data.error == 0) {
+      location.href = cart_url;
+    } else {
+      console.log(data);
+      alert(data.message);
+    }
+  }, 'POST', 'JSON');
+}
+
+/**
  * 获得选定的商品属性
  */
 function getSelectedAttributes(formBuy)

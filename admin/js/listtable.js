@@ -179,6 +179,23 @@ listTable.remove = function(id, cfm, opt)
   }
 }
 
+/**
+ * 订单，矩阵接口重试
+ */
+listTable.retry = function(id, cfm, opt)
+{
+  if (opt == null)
+  {
+    opt = "retry";
+  }
+
+
+    var args = "act=" + opt + "&id=" + id + this.compileFilter();
+
+    Ajax.call(this.url, args, this.listCallback, "GET", "JSON",false);
+    this.loadList();
+}
+
 listTable.gotoPageFirst = function()
 {
   if (this.filter.page > 1)

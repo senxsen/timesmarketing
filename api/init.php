@@ -18,7 +18,7 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 if (__FILE__ == '')
 {
@@ -111,15 +111,15 @@ $sess       = new cls_session($db, $ecs->table('sessions'), $ecs->table('session
 $_CFG = load_config();
 
 /* 初始化用户插件 */
-$user =& init_users();
+$user = init_users();
 
 if ((DEBUG_MODE & 1) == 1)
 {
-//    error_reporting(E_ALL);
+    error_reporting(E_ALL);
 }
 else
 {
-//    error_reporting(E_ALL ^ E_NOTICE);
+    error_reporting(E_ALL ^ E_NOTICE);
 }
 if ((DEBUG_MODE & 4) == 4)
 {

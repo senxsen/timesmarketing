@@ -18,6 +18,8 @@ define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
 require_once(ROOT_PATH . 'includes/lib_order.php');
 require_once(ROOT_PATH . 'includes/lib_goods.php');
+require_once(ROOT_PATH . 'includes/cls_matrix.php');
+include_once(ROOT_PATH . 'includes/cls_certificate.php');
 
 /*------------------------------------------------------ */
 //-- 订单查询
@@ -60,9 +62,32 @@ elseif ($_REQUEST['act'] == 'list')
     /* 检查权限 */
     admin_priv('order_view');
 
+
+    /* 载入配送方式 */
+    $smarty->assign('shipping_list', shipping_list());
+
+    /* 载入支付方式 */
+    $smarty->assign('pay_list', payment_list());
+
+    /* 载入国家 */
+    $smarty->assign('country_list', get_regions());
+
+    /* 载入订单状态、付款状态、发货状态 */
+    $smarty->assign('os_list', get_status_list('order'));
+    $smarty->assign('ps_list', get_status_list('payment'));
+    $smarty->assign('ss_list', get_status_list('shipping'));
+
     /* 模板赋值 */
-    $smarty->assign('ur_here', $_LANG['02_order_list']);
-    $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));
+    // $smarty->assign('ur_here', $_LANG['03_order_query']);
+    // $smarty->assign('action_link', array('href' => 'order.php?act=list', 'text' => $_LANG['02_order_list']));
+    
+    $cert = new certificate();
+    $cert->is_bind_sn('ecos.ome')?$smarty->assign('is_bind_erp',true):$smarty->assign('is_bind_erp',false);
+    $cert->is_bind_sn('taodali')?$smarty->assign('is_bind_taoda',true):$smarty->assign('is_bind_taoda',false);
+
+    /* 模板赋值 */
+    // $smarty->assign('ur_here', $_LANG['02_order_list']);
+    // $smarty->assign('action_link', array('href' => 'order.php?act=order_query', 'text' => $_LANG['03_order_query']));
 
     $smarty->assign('status_list', $_LANG['cs']);   // 订单状态
 
@@ -78,6 +103,46 @@ elseif ($_REQUEST['act'] == 'list')
     $smarty->assign('page_count',   $order_list['page_count']);
     $smarty->assign('sort_order_time', '<img src="images/sort_desc.gif">');
 
+
+
+    $panel_flag=0;
+    $erp_icon_html="";
+    $erpstr=array();
+    $is_super_admin=is_super_admin();
+    $panel_display="none";
+    if($order_list['record_count']>=50){
+        $sql = "SELECT  value  from " . $GLOBALS['ecs']->table('shop_config') .
+               "WHERE code = 'showerpPanel'";
+        $rs=$GLOBALS['db']->getRow($sql);
+        if($rs['value']==1 and $is_super_admin==1){
+            $panel_display="block";
+        }
+        $panel_flag=$is_super_admin==1?1:0;
+        $onclick=$is_super_admin==1?'onclick="showPanel()"':"";
+        $cert = new certificate();
+        if($cert->is_bind_sn('erp','goods_name')){//已经开通绑定了ERP
+            $panel_flag=0;
+            $erp_url="https://account.shopex.cn/product";//erp登录地址
+            $erp_icon_html='<a href="'.$erp_url.'" class="btn-ERP" target="_blank">'.$_LANG['erp_enter'].'<i class="cl-red">ERP</i>'.$_LANG['erp_processing_orders'].'</a>';
+        }elseif($cert->is_open_sn('erp')) {//只开通了ERP未绑定
+            $erpstr=array($_LANG['erp_bind_desc'],$_LANG['erp_bind']);//您已开通ERP，请授权绑定|去绑定
+            $erp_url = "certificate.php?act=list_edit";//绑定erp的地址
+            $url=$is_super_admin==1?'javascript:void(0)':$erp_url;
+            $erp_icon_html='<a href="'.$url.'" class="btn-ERP" '.$onclick.'>'.$_LANG['erp_bind_Auth'].'<i class="cl-red">ERP</i></a>';//授权绑定
+        }else{//未开通ERP
+            $erpstr=array($_LANG['erp_open_desc'],$_LANG['erp_open']);//已有99%的用户使用ERP处理订单|去开通
+            $erp_url = "http://yunqi.shopex.cn/products/erp";//erp登录地址
+            $erp_icon_html='<a href="'.$erp_url.'" target="_blank" onclick="getSnList();" class="btn-ERP" >'.$_LANG['erp_open_details'].'<i class="cl-red">ERP</i></a>';//了解详情开通
+        }
+    }
+    $smarty->assign('panel_flag',  $panel_flag);
+    $smarty->assign('panel_display',  $panel_display);
+    $smarty->assign('erp_str',  $erpstr);
+    $smarty->assign('erp_url',  $erp_url);
+    $smarty->assign('erp_icon_html',  $erp_icon_html);
+
+
+    
     /* 显示模板 */
     assign_query_info();
     $smarty->display('order_list.htm');
@@ -90,6 +155,8 @@ elseif ($_REQUEST['act'] == 'query')
 {
     /* 检查权限 */
     admin_priv('order_view');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     $order_list = order_list();
 
@@ -108,6 +175,8 @@ elseif ($_REQUEST['act'] == 'query')
 
 elseif ($_REQUEST['act'] == 'info')
 {
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
     /* 根据订单id或订单号查询订单信息 */
     if (isset($_REQUEST['order_id']))
     {
@@ -349,6 +418,7 @@ elseif ($_REQUEST['act'] == 'info')
 
         $goods_list[] = $row;
     }
+    // echo "<pre>";print_r($order);//exit();
 
     $attr = array();
     $arr  = array();
@@ -540,6 +610,8 @@ elseif ($_REQUEST['act'] == 'delivery_list')
 {
     /* 检查权限 */
     admin_priv('delivery_view');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     /* 查询 */
     $result = delivery_list();
@@ -590,6 +662,8 @@ elseif ($_REQUEST['act'] == 'delivery_info')
 {
     /* 检查权限 */
     admin_priv('delivery_view');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     $delivery_id = intval(trim($_REQUEST['delivery_id']));
 
@@ -1045,6 +1119,8 @@ elseif ($_REQUEST['act'] == 'back_list')
 {
     /* 检查权限 */
     admin_priv('back_view');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     /* 查询 */
     $result = back_list();
@@ -2036,6 +2112,8 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
 {
     /* 检查权限 */
     admin_priv('order_edit');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     /* 取得参数 order_id */
     $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
@@ -2434,6 +2512,8 @@ elseif ($_REQUEST['act'] == 'merge')
 {
     /* 检查权限 */
     admin_priv('order_os_edit');
+    $matrix = new matrix();
+    $matrix->get_bind_info(array('ecos.ome'))?$smarty->assign('node_info',true):$smarty->assign('node_info',false);
 
     /* 取得满足条件的订单 */
     $sql = "SELECT o.order_sn, u.user_name " .
@@ -3218,6 +3298,11 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
                 return_user_surplus_integral_bonus($order);
 
                 $sn_list[] = $order['order_sn'];
+
+                // 通知erp取消订单
+                // include_once(ROOT_PATH . 'includes/cls_matrix.php');
+                $matrix = new matrix();
+                $matrix->set_dead_order($order_id);
             }
             else
             {
@@ -3276,6 +3361,11 @@ elseif ($_REQUEST['act'] == 'batch_operate_post')
                 return_user_surplus_integral_bonus($order);
 
                 $sn_list[] = $order['order_sn'];
+
+                // 通知erp取消订单
+                // include_once(ROOT_PATH . 'includes/cls_matrix.php');
+                $matrix = new matrix();
+                $matrix->set_dead_order($order_id);
              }
             else
             {
@@ -3448,7 +3538,14 @@ elseif ($_REQUEST['act'] == 'operate_post')
             $order['shipping_status'] = SS_RECEIVED;
         }
         update_order($order_id, $arr);
-
+        //订单支付后，创建订单到淘打
+        include_once(ROOT_PATH."includes/cls_matrix.php");
+        $matrix = new matrix();
+        $order_info = order_info($order_id);
+        $bind_info = $matrix->get_bind_info(array('taodali'));
+        if($bind_info){
+            $matrix->createOrder($order_info['order_sn'],'taodali');
+        }
         /* 记录log */
         order_action($order['order_sn'], OS_CONFIRMED, $order['shipping_status'], PS_PAYED, $action_note);
     }
@@ -3965,6 +4062,10 @@ elseif ($_REQUEST['act'] == 'operate_post')
                 $msg = $_LANG['send_mail_fail'];
             }
         }
+        // 通知erp取消订单
+        // include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        $matrix = new matrix();
+        $matrix->set_dead_order($order_id);
     }
     /* 设为无效 */
     elseif ('invalid' == $operation)
@@ -3999,6 +4100,11 @@ elseif ($_REQUEST['act'] == 'operate_post')
 
         /* 退货用户余额、积分、红包 */
         return_user_surplus_integral_bonus($order);
+
+        // 通知erp取消订单
+        // include_once(ROOT_PATH . 'includes/cls_matrix.php');
+        $matrix = new matrix();
+        $matrix->set_dead_order($order_id);
     }
     /* 退货 */
     elseif ('return' == $operation)
@@ -4400,6 +4506,13 @@ elseif ($_REQUEST['act'] == 'edit_pay_note')
         make_json_error($GLOBALS['db']->errorMsg());
     }
 }
+/*------------------------------------------------------ */
+//-- 矩阵接口失败，重试
+/*------------------------------------------------------ */
+elseif($_REQUEST['act']=='retry'){
+    $_GET['id'] and order_retry($_GET['id']);
+    make_json_result('true');
+}
 
 /*------------------------------------------------------ */
 //-- 获取订单商品信息
@@ -4461,6 +4574,32 @@ elseif ($_REQUEST['act'] == 'get_goods_info')
     $str = $smarty->fetch('order_goods_info.htm');
     $goods[] = array('order_id' => $order_id, 'str' => $str);
     make_json_result($goods);
+}else if($_REQUEST['act'] == 'install_cloud') {
+/**
+*  激活云起页面
+**/
+  $smarty->display('install-icloud.htm');
+}
+
+
+elseif ($_REQUEST['act'] == 'cancelErpPanel')
+{
+    //更新订单总金额
+    $sql = "UPDATE " . $GLOBALS['ecs']->table('shop_config') .
+        " SET value = 0
+         WHERE code = 'showerpPanel' and value != 0 ";
+    return $GLOBALS['db']->query($sql);
+}
+/**
+*  获取云起开通产品列表
+**/
+elseif ($_REQUEST['act']=='getSnList') {
+    if($_SESSION['yunqi_login'] && $_SESSION['TOKEN'] ){
+        include_once(ROOT_PATH."includes/cls_certificate.php");
+        $cert = new certificate();
+        $result = $cert->getsnlistoauth($_SESSION['TOKEN'] ,array());
+        $result['status']=='success' and $cert->save_snlist($result['data']);
+    }
 }
 
 /**
@@ -5039,7 +5178,7 @@ function order_list()
         $filter['page_count']     = $filter['record_count'] > 0 ? ceil($filter['record_count'] / $filter['page_size']) : 1;
 
         /* 查询 */
-        $sql = "SELECT o.order_id, o.order_sn, o.add_time, o.order_status, o.shipping_status, o.order_amount, o.money_paid," .
+        $sql = "SELECT o.order_id, o.order_sn, o.add_time, o.order_status, o.shipping_status, o.order_amount, o.money_paid, o.callback_status," .
                     "o.pay_status, o.consignee, o.address, o.email, o.tel, o.extension_code, o.extension_id, " .
                     "(" . order_amount_field('o.') . ") AS total_fee, " .
                     "IFNULL(u.user_name, '" .$GLOBALS['_LANG']['anonymous']. "') AS buyer ".
@@ -6338,4 +6477,21 @@ function get_site_root_url()
     return 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/' . ADMIN_PATH . '/order.php', '', PHP_SELF);
 
 }
+
+
+/**
+ * 判断管理员是否是超级管理员（绑定云起的）
+ */
+function is_super_admin(){
+    $sql = "SELECT action_list
+            FROM " . $GLOBALS['ecs']->table('admin_user') . "
+            WHERE user_id = {$_SESSION['admin_id']}";
+    $rs=$GLOBALS['db']->getOne($sql);
+    if(!empty($rs) and $rs=='all'){
+        return 1;
+    }
+    return 0;
+}
+
+
 ?>

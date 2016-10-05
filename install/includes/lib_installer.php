@@ -28,9 +28,7 @@ function get_gd_version()
 {
     include_once(ROOT_PATH . 'includes/cls_image.php');
 
-    //return cls_image::gd_version();
-    $gd = new cls_image;
-    return $gd->gd_version();
+    return cls_image::gd_version();
 }
 
 /**
@@ -336,6 +334,7 @@ function create_config_file($db_host, $db_port, $db_user, $db_pass, $db_name, $p
     $content .= "define('AUTH_KEY', 'this is a key');\n\n";
     $content .= "define('OLD_AUTH_KEY', '');\n\n";
     $content .= "define('API_TIME', '');\n\n";
+    $content .= "define('STORE_KEY','".md5(microtime())."');\n\n";
     $content .= '?>';
 
 
@@ -530,8 +529,8 @@ function copy_files($source, $target)
 
     if (!file_exists($target))
     {
-        if (!mkdir(rtrim($target, '/'), 0777))
-//        if (!mkdir($target, 0777))
+        //if (!mkdir(rtrim($target, '/'), 0777))
+        if (!mkdir($target, 0777))
         {
             $err->add($_LANG['cannt_mk_dir']);
             return false;
@@ -740,7 +739,7 @@ function deal_aftermath()
 
     /* 写入 hash_code，做为网站唯一性密钥 */
     $hash_code = md5(md5(time()) . md5($db->dbhash) . md5(time()));
-    $sql = "UPDATE $prefix"."shop_config SET value = '$hash_code' WHERE code = 'hash_code' AND value = ''";
+    $sql = "UPDATE $prefix"."shop_config SET value = '$hash_code' WHERE code = 'hash_code' ";
     if (!$db->query($sql, 'SILENT'))
     {
         $err->add($db->errno() .' '. $db->error());
@@ -1027,4 +1026,5 @@ function save_uc_config($config)
 
     return true;
 }
+
 ?>

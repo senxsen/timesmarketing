@@ -50,7 +50,7 @@ $_LANG['query_info'] = "共执行 %d 个查询，用时 %f 秒，在线 %d 人";
 $_LANG['gzip_enabled'] = '，Gzip 已启用';
 $_LANG['gzip_disabled'] = '，Gzip 已禁用';
 $_LANG['memory_info'] = '，占用内存 %0.3f MB';
-$_LANG['cart_info'] = '您的购物车中有 %d 件商品，总计金额 %s。';
+$_LANG['cart_info'] = '购物车（ %d ）';
 $_LANG['shopping_and_other'] = '购买过此商品的人还购买过';
 $_LANG['bought_notes'] = '购买记录';
 $_LANG['later_bought_amounts'] = '近期成交数量';
@@ -131,6 +131,7 @@ $_LANG['goods_compare'] = '商品比较';
 $_LANG['properties'] = '商品属性：';
 $_LANG['brief'] = '简要介绍：';
 $_LANG['add_time'] = '上架时间：';
+$_LANG['cum_sales'] = '累计销量：';
 $_LANG['residual_time'] = '剩余时间：';
 $_LANG['day'] = '天';
 $_LANG['hour'] = '小时';
@@ -331,7 +332,8 @@ $_LANG['total_fee'] = '应付款金额';
 $_LANG['self_site'] = '本站';
 $_LANG['order_gift_integral'] = '订单 %s 赠送的积分';
 
-$_LANG['order_payed_sms'] = '订单 %s 付款了。收货人：%s；电话：%s。';
+$_LANG['order_payed_sms'] = '订单 %s 已付款。收货人：%s；电话：%s。';
+$_LANG['order_payed_to_customer_sms'] = '订单 %s 付款了，付款金额：%s，我们将立即配货发货。';
 
 /* 缺货处理 */
 $_LANG['oos'][OOS_WAIT] = '等待所有商品备齐后再发';

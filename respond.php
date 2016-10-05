@@ -32,7 +32,23 @@ if (empty($pay_code) && ($_REQUEST['ext1'] == 'shenzhou') && ($_REQUEST['ext2'] 
 {
     $pay_code = 'shenzhou';
 }
+//获取天工支付方式
+if(empty($pay_code))
+{
+    if( $_GET['metadata'] == 'tiangong')
+    {
+        $pay_code = 'tiangong';
+    }
+    if( $_GET['metadata'] == 'tiangongwx')
+    {
+        $pay_code = 'tiangongwx';
+    }
 
+    if( $_GET['metadata'] == 'yunqiwx')
+    {
+        $pay_code = 'yunqi';
+    }
+}
 /* 参数是否为空 */
 if (empty($pay_code))
 {

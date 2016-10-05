@@ -23,7 +23,7 @@ $_LANG['express_desc']       = 'IPS易捷支付系統為中小型電子商務網
 
 $_LANG['ips_account']    = 'IPS商戶號';
 $_LANG['ips_key']        = 'ISP商戶密鑰';
-$_LANG['pay_button']     = '立即使用易捷IPS支付';
+$_LANG['pay_button']     = '立即支付';
 $_LANG['please_select_bank'] = '請選擇支付銀行';
 $_LANG['icbc'] = '中國工商銀行';
 $_LANG['cmb'] = '招商銀行';

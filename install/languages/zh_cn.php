@@ -16,7 +16,7 @@
 /* 通用语言项 */
 $_LANG['prev_step'] = '上一步：';
 $_LANG['next_step'] = '下一步：';
-$_LANG['copyright'] = '&copy; 2005-2012 <a href="http://www.ecshop.com" target="_blank">上海商派网络科技有限公司</a>。保留所有权利。';
+$_LANG['copyright'] = '&copy; 2005-2016 <a href="http://www.ecshop.com" target="_blank">上海商派软件有限公司</a>。保留所有权利。';
 
 
 /* 欢迎页 */
@@ -119,10 +119,13 @@ $_LANG['admin_user'][] = '订单列表|order.php?act=list';
 $_LANG['admin_user'][] = '用户评论|comment_manage.php?act=list';
 $_LANG['admin_user'][] = '会员列表|users.php?act=list';
 $_LANG['admin_user'][] = '商店设置|shop_config.php?act=list_edit';
+$_LANG['admin_user'][] = '移动版|lead.php?act=list';
+$_LANG['admin_user'][] = '服务市场|service_market.php';
 $_LANG['password_intensity'] = '密码强度：';
 $_LANG['pwd_lower'] = '弱';
 $_LANG['pwd_middle'] = '中';
 $_LANG['pwd_high'] = '强';
+$_LANG['yunqi_pass'] = '跳过';
 
 /* 提示信息 */
 $_LANG['has_locked_installer'] = '<strong>安装程序已经被锁定。</strong><br /><br />如果您确定要重新安装 ECSHOP，请删除data目录下的 install.lock。';
@@ -162,7 +165,7 @@ $_LANG['js_languages']['create_admin_passport'] = '创建管理员帐号........
 $_LANG['js_languages']['do_others'] = '处理其它............';
 $_LANG['js_languages']['display_detail'] = '显示细节';
 $_LANG['js_languages']['hide_detail'] = '隐藏细节';
-$_LANG['js_languages']['has_been_stopped'] = '安装进程已中止';
+$_LANG['js_languages']['has_been_stopped'] = '安装进程已完成';
 $_LANG['js_languages']['setup_ucenter'] = '注册到UCenter............';
 $_LANG['js_languages']['password_invaild'] = '密码必须同时包含字母及数字';
 $_LANG['js_languages']['password_short'] = '密码长度不能小于8';

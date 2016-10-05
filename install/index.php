@@ -43,7 +43,7 @@ else
 
 /* 初始化流程控制变量 */
 $step = isset($_REQUEST['step']) ? $_REQUEST['step'] : 'welcome';
-if (file_exists(ROOT_PATH . 'data/install.lock') && $step != 'active')
+if (file_exists(ROOT_PATH . 'data/install.lock') && $step != 'done')
 {
     $step = 'error';
     $err->add($_LANG['has_locked_installer']);
@@ -395,21 +395,26 @@ case 'do_others' :
 
 case 'done' :
     $result = deal_aftermath();
-    if ($result === false)
-    {
-        $err_msg = implode(',', $err->get_all());
-        $smarty->assign('err_msg', $err_msg);
-        $smarty->display('error.php');
+    clear_all_files();
+    if($_SERVER['HTTP_HOST']!='localhost' && $_REQUEST['type']=='yunqi'){
+        $url = url()."/yunqi_check.php?act=yunqi_check";
+        header("Location: ".$url);exit;
+    }else{
+       if ($result === false)
+        {
+            $err_msg = implode(',', $err->get_all());
+            $smarty->assign('err_msg', $err_msg);
+            $smarty->display('error.php');
+        }
+        else
+        {
+            @unlink(ROOT_PATH .'data/config_temp.php');
+            $spt_code = get_spt_code();
+            $_SESSION['done']['spt_code'] = $spt_code;
+            $smarty->assign('spt_code', spt_code);
+            $smarty->display('done.php');
+        } 
     }
-    else
-    {
-        @unlink(ROOT_PATH .'data/config_temp.php');
-        $spt_code = get_spt_code();
-        $_SESSION['done']['spt_code'] = $spt_code;
-        $smarty->assign('spt_code', spt_code);
-        $smarty->display('done.php');
-    }
-
     break;
 
 case 'active' :

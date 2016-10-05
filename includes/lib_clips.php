@@ -387,6 +387,36 @@ function update_user_account($surplus)
 }
 
 /**
+ * 检查充值的金额是否与会员资金管理ID相符
+ *
+ * @access  public
+ * @param   string   $rec_id      会员资金管理ID
+ * @param   float    $money       充值的金额
+ * @return  true
+ */
+function check_account_money($rec_id, $user_id, $money)
+{
+    if(is_numeric($rec_id))
+    {
+        $sql = 'SELECT amount FROM ' . $GLOBALS['ecs']->table('user_account') .
+              " WHERE id = '$rec_id' and user_id='$user_id'";
+        $amount = $GLOBALS['db']->getOne($sql);
+    }
+    else
+    {
+        return false;
+    }
+    if ($money == $amount)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
  * 将支付LOG插入数据表
  *
  * @access  public

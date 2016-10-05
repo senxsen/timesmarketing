@@ -15,7 +15,7 @@
 
 $_LANG['app_name'] = 'ECSHOP';
 $_LANG['cp_home'] = 'ECSHOP 管理中心';
-$_LANG['copyright'] = '版權所有 &copy; 2005-2012 上海商派網絡科技有限公司，並保留所有權利。';
+$_LANG['copyright'] = '版權所有 &copy; 2005- '. date('Y') .' 上海商派軟件有限公司，並保留所有權利。';
 $_LANG['query_info'] = '共執行 %d 個查詢，用時 %s 秒';
 $_LANG['memory_info'] = '，內存佔用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已啟用';
@@ -69,6 +69,7 @@ $_LANG['button_submit'] = ' 確定 ';
 $_LANG['button_save'] = ' 保存 ';
 $_LANG['button_reset'] = ' 重置 ';
 $_LANG['button_search'] = ' 搜索 ';
+$_LANG['advanced_search'] = '高級搜索';
 
 $_LANG['priv_error'] = '對不起,您沒有執行此項操作的權限!';
 $_LANG['drop_confirm'] = '您確認要刪除這條記錄嗎?';
@@ -129,6 +130,7 @@ $_LANG['gram'] = '克';
 $_LANG['kilogram'] = '千克';
 
 /* 菜單分類部分 */
+$_LANG['01_certificate_manage'] = '雲服務中心';
 $_LANG['02_cat_and_goods'] = '商品管理';
 $_LANG['03_promotion'] = '促銷管理';
 $_LANG['04_order'] = '訂單管理';
@@ -144,6 +146,7 @@ $_LANG['13_backup'] = '數據庫管理';
 $_LANG['14_sms'] = '短信管理';
 $_LANG['15_rec'] = '推薦管理';
 $_LANG['16_email_manage'] = '郵件群發管理';
+$_LANG['18_lead_manage'] = '移動版管理';
 
 /* 商品管理 */
 $_LANG['01_goods_list'] = '商品列表';
@@ -255,7 +258,7 @@ $_LANG['suppliers_list'] = '供貨商列表';
 
 /* 系統設置 */
 $_LANG['01_shop_config'] = '商店設置';
-$_LANG['shop_authorized'] = '授權證書';
+// $_LANG['shop_authorized'] = '授權證書';
 $_LANG['shp_webcollect'] = '網羅天下';
 $_LANG['02_payment_list'] = '支付方式';
 $_LANG['03_shipping_list'] = '配送方式';
@@ -342,4 +345,16 @@ $_LANG['brand_name_exist'] = '已存在相同的品牌名稱!';
 
 $_LANG['alipay_login'] = '<a href="https://www.alipay.com/user/login.htm?goto=https%3A%2F%2Fwww.alipay.com%2Fhimalayas%2Fpracticality_profile_edit.htm%3Fmarket_type%3Dfrom_agent_contract%26customer_external_id%3D%2BC4335319945672464113" target="_blank">立即免費申請支付接口權限</a>';
 $_LANG['alipay_look'] = '<a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">請申請成功後登錄支付寶賬戶查看</a>';
+
+
+$_LANG['04_sms_sign'] = '短信簽名';
+
+/* 雲服務中心 */
+$_LANG['certificate'] = '授權綁定';
+$_LANG['service_market'] = '服務市場';
+$_LANG['sms_resource'] = '短信平台';
+$_LANG['logistic_tracking'] = '雲起物流';
+
+/* 移動版全民分銷開通引導頁 */
+$_LANG['lead'] = '移動版';
 ?>

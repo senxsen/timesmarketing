@@ -74,7 +74,7 @@ $_LANG['role_manage'] = '角色管理';
 
 //系統設置部分權限
 $_LANG['shop_config'] = '商店設置';
-$_LANG['shop_authorized'] = '授權證書';
+// $_LANG['shop_authorized'] = '授權證書';
 $_LANG['webcollect_manage'] = '網羅天下管理';
 $_LANG['ship_manage'] = '配送方式管理';
 $_LANG['payment'] = '支付方式管理';
@@ -148,5 +148,11 @@ $_LANG['sms_send']        = '發送短信';
 $_LANG['sms_charge']      = '短信充值';
 $_LANG['send_history']    = '發送記錄';
 $_LANG['charge_history']  = '充值記錄 ';
+
+//云服务中心管理
+$_LANG['certificate_manage'] = '授權綁定';
+
+//移动版全民分销开通引导页管理
+$_LANG['lead_manage'] = '移動版';
 
 ?>

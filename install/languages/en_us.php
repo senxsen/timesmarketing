@@ -18,7 +18,7 @@
 /* Common language item */
 $_LANG['prev_step'] = 'Previous:';
 $_LANG['next_step'] = 'Next:';
-$_LANG['copyright'] = '&copy; 2005-2012 <a href="http://www.ecshop.com" target="_blank">Shanghai ShopEx Network Technology Co,.Ltd. </a> <br> All right reserved.';
+$_LANG['copyright'] = '&copy; 2005-2016 <a href="http://www.ecshop.com" target="_blank">Shanghai Business School Software Co, .Ltd. </a> <br> All right reserved.';
 
 
 /* Welcome page */
@@ -109,6 +109,8 @@ $_LANG['admin_user'][] = 'Goods list|goods.php?act=list';
 $_LANG['admin_user'][] = 'Order list|order.php?act=list';
 $_LANG['admin_user'][] = 'User comments|comment_manage.php?act=list';
 $_LANG['admin_user'][] = 'User list|users.php?act=list';
+$_LANG['admin_user'][] = 'wap|lead.php?act=list';
+$_LANG['admin_user'][] = 'Service market|service_market.php';
 $_LANG['password_intensity'] = 'Password intensity';
 $_LANG['pwd_lower'] = 'Lower';
 $_LANG['pwd_middle'] = 'Middle';

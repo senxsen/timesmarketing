@@ -409,14 +409,6 @@
               <td bgcolor="#ffffff">{$lang.backup_phone}:</td>
               <td bgcolor="#ffffff">{$consignee.mobile|escape}</td>
             </tr>
-             <!-- {if $total.real_goods_count gt 0} -->
-            <tr>
-              <td bgcolor="#ffffff">{$lang.sign_building}:</td>
-              <td bgcolor="#ffffff">{$consignee.sign_building|escape} </td>
-              <td bgcolor="#ffffff">{$lang.deliver_goods_time}:</td>
-              <td bgcolor="#ffffff">{$consignee.best_time|escape}</td>
-            </tr>
-            <!-- {/if} -->
           </table>
       </div>
      <div class="blank"></div>
@@ -466,12 +458,38 @@
             </tr>
             <!-- {foreach from=$payment_list item=payment} -->
             <!-- 循环支付方式 -->
+            {if $payment.pay_code!='yunqi'}
             <tr>
               <td valign="top" bgcolor="#ffffff"><input type="radio" name="payment" value="{$payment.pay_id}" {if $order.pay_id eq $payment.pay_id}checked{/if} isCod="{$payment.is_cod}" onclick="selectPayment(this)" {if $cod_disabled and $payment.is_cod eq "1"}disabled="true"{/if}/></td>
               <td valign="top" bgcolor="#ffffff"><strong>{$payment.pay_name}</strong></td>
               <td valign="top" bgcolor="#ffffff">{$payment.pay_desc}</td>
               <td align="right" bgcolor="#ffffff" valign="top">{$payment.format_pay_fee}</td>
             </tr>
+            {else}
+            <tr>
+              <td rowspan=2 valign="middle" bgcolor="#ffffff">
+                <input type="radio" id="yunqi_payment" name="payment" value="{$payment.pay_id}" {if $order.pay_id eq $payment.pay_id}checked{/if} isCod="{$payment.is_cod}" onclick="selectPayment(this)" {if $cod_disabled and $payment.is_cod eq "1"}disabled="true"{/if}/></td>
+              <td class="list-tit" valign="top" bgcolor="#ffffff">
+                <strong>{$payment.pay_name} <i style="display:inline-block;width: 70px ;text-align: center" id="payMethod">（支付宝）</i></strong>
+                
+              </td>
+              <td valign="top" bgcolor="#ffffff">{$payment.pay_desc}</td>
+              <td align="right" bgcolor="#ffffff" valign="top">{$payment.format_pay_fee}</td>
+            </tr>
+            <tr>
+              <td align="left" bgcolor="#ffffff" valign="top" colspan=3>
+
+                  <span class="item">
+                    <input type="radio" id="alipay" name="yunqi_paymethod" value="alipay" checked onclick="checkIpt(this);">
+                    <label for="paybal" class="alipay-image"></label>
+                  </span>
+                  <span class="item">
+                    <input type="radio" id="wxpay" name="yunqi_paymethod" value="wxpay" onclick="checkIpt(this);">
+                    <label for="wechat" class="wechat-image"></label>
+                  </span>
+              </td>
+            </tr>
+            {/if}
             <!-- {/foreach} 循环支付方式 -->
           </table>
     </div>
@@ -762,7 +780,7 @@
             <td width="50%" valign="top" bgcolor="#ffffff">
             <h6><span>用户登录：</span></h6>
             <form action="flow.php?step=login" method="post" name="loginForm" id="loginForm" onsubmit="return checkLoginForm(this)">
-                <table width="90%" border="0" cellpadding="8" cellspacing="1" bgcolor="#B0D8FF" class="table">
+                <table width="90%" border="0" cellpadding="8" cellspacing="1" bgcolor="#eeeeee" class="table">
                   <tr>
                     <td bgcolor="#ffffff"><div align="right"><strong>{$lang.username}</strong></div></td>
                     <td bgcolor="#ffffff"><input name="username" type="text" class="inputBg" id="username" /></td>
@@ -800,7 +818,7 @@
             <td valign="top" bgcolor="#ffffff">
             <h6><span>用户注册：</span></h6>
             <form action="flow.php?step=login" method="post" name="formUser" id="registerForm" onsubmit="return checkSignupForm(this)">
-               <table width="98%" border="0" cellpadding="8" cellspacing="1" bgcolor="#B0D8FF" class="table">
+               <table width="98%" border="0" cellpadding="8" cellspacing="1" bgcolor="#eeeeee" class="table">
                   <tr>
                     <td bgcolor="#ffffff" align="right" width="25%"><strong>{$lang.username}</strong></td>
                     <td bgcolor="#ffffff"><input name="username" type="text" class="inputBg" id="username" onblur="is_registered(this.value);" /><br />
@@ -853,16 +871,6 @@
 
 </div>
 <div class="blank5"></div>
-<!--帮助-->
-<div class="block">
-  <div class="box">
-   <div class="helpTitBg clearfix">
-    <!-- #BeginLibraryItem "/library/help.lbi" --><!-- #EndLibraryItem -->
-   </div>
-  </div>
-</div>
-<div class="blank"></div>
-<!--帮助-->
 <!--友情链接 start-->
 <!--{if $img_links  or $txt_links }-->
 <div id="bottomNav" class="box">
@@ -894,5 +902,16 @@ var compare_no_goods = "{$lang.compare_no_goods}";
 var btn_buy = "{$lang.btn_buy}";
 var is_cancel = "{$lang.is_cancel}";
 var select_spe = "{$lang.select_spe}";
+
+function checkIpt(item){
+  var val = item.value;
+  var method = document.getElementById('payMethod');
+  if(val == 'wxpay'){
+    method.innerHTML = '微&nbsp;&nbsp;&nbsp;信';
+  }else{
+    method.innerHTML = '支付宝';
+  }
+  document.getElementById('yunqi_payment').click();
+}
 </script>
 </html>

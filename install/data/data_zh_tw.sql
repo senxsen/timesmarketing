@@ -3636,6 +3636,7 @@ INSERT INTO `ecs_shop_config` (`id`, `parent_id`, `code`, `type`, `store_range`,
 (244, 2, 'ent_ac', 'hidden', '', '', '', '1'),
 (245, 2, 'ent_sign', 'hidden', '', '', '', '1'),
 (246, 2, 'ent_email', 'hidden', '', '', '', '1'),
+(247, 2, 'logistics_trace', 'select', '1,0', '', '0', '1'),
 (301, 3, 'date_format', 'hidden', '', '', 'Y-m-d', '1'),
 (302, 3, 'time_format', 'text', '', '', 'Y-m-d H:i:s', '1'),
 (303, 3, 'currency_format', 'text', '', '', '￥%s元', '1'),
@@ -3736,9 +3737,11 @@ INSERT INTO `ecs_shop_config` (`id`, `parent_id`, `code`, `type`, `store_range`,
 (802, 8, 'sms_order_placed', 'select', '1,0', '', '0', '1'),
 (803, 8, 'sms_order_payed', 'select', '1,0', '', '0', '1'),
 (804, 8, 'sms_order_shipped', 'select', '1,0', '', '0', '1'),
-(901, 9, 'wap_config', 'select', '1,0', '', '0', '1'),
-(902, 9, 'wap_logo', 'file', '', '../images/', '', '1'),
-(903, 2, 'message_check', 'select', '1,0', '', '1', '1');
+(805, 8, 'sms_order_payed_to_customer', 'select', '1,0', '', '0', '1'),
+(806, 2, 'snlist_code', 'hidden', '', '', '{"erp":"goods_1109","fy":"goods_1137","taodali":"goods_1103","HDT":"goods_1500"}', '1'),
+(903, 2, 'message_check', 'select', '1,0', '', '1', '1'),
+(904, 0, 'showerpPanel', 'hidden', '', '', '1', '1');
+
 --
 -- user_rank
 --

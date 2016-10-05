@@ -94,4 +94,9 @@ $_LANG['label_captcha'] = 'Verification Code:';
 $_LANG['click_for_another'] = 'Invisibility? Replace an image.';
 $_LANG['signin_now'] = 'Enter';
 $_LANG['remember'] = 'Remember my login information.';
+$_LANG['other_login_methods'] = 'Other Login methods';
+$_LANG['yunqi_account'] = 'Yunqi Account';
+$_LANG['back_local_login'] = 'Back local login';
+$_LANG['ecshop_account'] = 'ECshop Account';
+$_LANG['ecshop_login'] = 'ECshop Login';
 ?>

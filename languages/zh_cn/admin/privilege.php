@@ -31,8 +31,8 @@ $_LANG['go_allot_priv'] = '设置管理员权限';
 
 $_LANG['view_log'] = '查看日志';
 
-$_LANG['back_home'] = '返回首页';
-$_LANG['forget_pwd'] = '您忘记了密码吗?';
+$_LANG['back_home'] = '去店铺首页>>';
+$_LANG['forget_pwd'] = '忘记密码?';
 $_LANG['get_new_pwd'] = '找回管理员密码';
 $_LANG['pwd_confirm'] = '确认密码';
 $_LANG['new_password'] = '新密码';
@@ -53,6 +53,8 @@ $_LANG['admin_edit'] = '编辑管理员';
 $_LANG['edit_pwd'] = '修改密码';
 
 $_LANG['back_admin_list'] = '返回管理员列表';
+
+$_LANG['login_yunqi'] = '云起登录';
 
 /* 提示信息 */
 $_LANG['js_languages']['user_name_empty'] = '管理员用户名不能为空!';
@@ -87,10 +89,15 @@ $_LANG['email_notic'] = '输入管理员的Email邮箱,必须为Email格式';
 $_LANG['confirm_notic'] = '输入管理员的确认密码,两次输入必须一致';
 
 /* 登录表单 */
-$_LANG['label_username'] = '管理员姓名：';
-$_LANG['label_password'] = '管理员密码：';
-$_LANG['label_captcha'] = '验证码：';
+$_LANG['label_username'] = '请填写您注册的邮箱或手机';
+$_LANG['label_password'] = '请输入密码';
+$_LANG['label_captcha'] = '输入验证码';
 $_LANG['click_for_another'] = '看不清？点击更换另一个验证码。';
-$_LANG['signin_now'] = '进入管理中心';
-$_LANG['remember'] = '请保存我这次的登录信息。';
+$_LANG['signin_now'] = '登 录';
+$_LANG['remember'] = '自动登录';
+$_LANG['other_login_methods'] = '其他登录方式';
+$_LANG['yunqi_account'] = '云起账号';
+$_LANG['back_local_login'] = '返回本地登录';
+$_LANG['ecshop_account'] = 'ECshop账号';
+$_LANG['ecshop_login'] = 'ECshop登录';
 ?>

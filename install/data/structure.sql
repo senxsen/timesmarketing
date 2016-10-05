@@ -120,6 +120,8 @@ CREATE TABLE `ecs_admin_user` (
   `suppliers_id` smallint(5) unsigned default '0',
   `todolist` LONGTEXT NULL,
   `role_id` smallint(5) default NULL,
+  `passport_uid` varchar(20) default NULL,
+  `yq_create_time` smallint(11) default NULL,
   PRIMARY KEY  (`user_id`),
   KEY `user_name` (`user_name`),
   KEY `agency_id` (`agency_id`)
@@ -509,9 +511,10 @@ CREATE TABLE `ecs_goods` (
   `click_count` int(10) unsigned NOT NULL default '0',
   `brand_id` smallint(5) unsigned NOT NULL default '0',
   `provider_name` varchar(100) NOT NULL default '',
-  `goods_number` smallint(5) unsigned NOT NULL default '0',
+  `goods_number` mediumint(8) unsigned NOT NULL default '0',
   `goods_weight` decimal(10,3) unsigned NOT NULL default '0.000',
   `market_price` decimal(10,2) unsigned NOT NULL default '0.00',
+  `virtual_sales` smallint(5) unsigned NOT NULL default '0',
   `shop_price` decimal(10,2) unsigned NOT NULL default '0.00',
   `promote_price` decimal(10,2) unsigned NOT NULL default '0.00',
   `promote_start_date` int(11) unsigned NOT NULL default '0',
@@ -754,6 +757,7 @@ CREATE TABLE `ecs_order_goods` (
   `goods_number` smallint(5) unsigned NOT NULL default '1',
   `market_price` decimal(10,2) NOT NULL default '0.00',
   `goods_price` decimal(10,2) NOT NULL default '0.00',
+  `discount_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '对接erp专用，商品优惠金额',
   `goods_attr` text NOT NULL,
   `send_number` smallint(5) unsigned NOT NULL default '0',
   `is_real` tinyint(1) unsigned NOT NULL default '0',
@@ -810,6 +814,7 @@ CREATE TABLE `ecs_order_info` (
   `pay_fee` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
   `pack_fee` decimal(10,2) NOT NULL default '0.00',
   `card_fee` decimal(10,2) NOT NULL default '0.00',
+  `goods_discount_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '对接erp专用，商品优惠总金额',
   `money_paid` decimal(10, 2) NOT NULL default '0.00',
   `surplus` decimal(10,2) NOT NULL default '0.00',
   `integral` int unsigned NOT NULL default '0.00',
@@ -836,6 +841,8 @@ CREATE TABLE `ecs_order_info` (
   `is_separate` tinyint(1) NOT NULL default '0',
   `parent_id` mediumint(8) unsigned NOT NULL default '0',
   `discount` decimal(10, 2) NOT NULL,
+  `callback_status` enum('true','false') DEFAULT 'true',
+  `lastmodify` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`order_id`),
   UNIQUE KEY `order_sn` (`order_sn`),
   KEY `user_id` (`user_id`),
@@ -1790,6 +1797,58 @@ CREATE TABLE `ecs_products` (
   `goods_id` mediumint(8) unsigned NOT NULL default '0',
   `goods_attr` varchar(50) default NULL,
   `product_sn` varchar(60) default NULL,
-  `product_number` smallint(5) unsigned default '0',
+  `product_number` mediumint(8) unsigned default '0',
   PRIMARY KEY  (`product_id`)
 ) ENGINE=MyISAM;
+
+--防并发表
+DROP TABLE IF EXISTS `ecs_coincidence`;
+CREATE TABLE `ecs_coincidence` (
+  `type_id` varchar(100) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`type_id`,`type`)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS `ecs_shop_bind`;
+CREATE TABLE `ecs_shop_bind` (
+  `shop_id` int(8) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL COMMENT '名称',
+  `node_id` varchar(32) DEFAULT NULL COMMENT '节点',
+  `node_type` varchar(128) DEFAULT NULL COMMENT '节点类型',
+  `status` enum('bind','unbind') DEFAULT NULL COMMENT '状态',
+  `app_url` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`shop_id`)
+) ENGINE=MyISAM;
+
+-- 矩阵接口返回日志表
+DROP TABLE IF EXISTS `ecs_callback_status`;
+CREATE TABLE `ecs_callback_status` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `msg_id` varchar(50) DEFAULT '',
+  `type` varchar(100) DEFAULT NULL,
+  `status` enum('true','false','running') DEFAULT 'false',
+  `type_id` varchar(50) DEFAULT NULL,
+  `date_time` int(11) DEFAULT NULL,
+  `data` text,
+  `disabled` enum('true','false') DEFAULT 'false',
+  `times` tinyint(4) DEFAULT '0',
+  `method` varchar(100) NOT NULL,
+  `http_type` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ind_type_type_id` USING BTREE (`type`,`type_id`),
+  KEY `date_time` (`date_time`),
+  KEY `ind_status` USING BTREE (`status`)
+) ENGINE=MyISAM;
+
+-- 对接erp在线支付方式记录
+DROP TABLE IF EXISTS `ecs_account_other_log`;
+CREATE TABLE `ecs_account_other_log` (
+`user_id` MEDIUMINT( 8 ) NOT NULL ,
+`order_id` MEDIUMINT( 8 ) NOT NULL ,
+`order_sn` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`money` DECIMAL( 10, 2 ) NOT NULL DEFAULT '0.00',
+`pay_type` VARCHAR( 20 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`pay_time` VARCHAR( 10 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`change_desc` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL 
+) ENGINE = MyISAM;

@@ -45,7 +45,7 @@ elseif ($order['consignee'] != $consignee)
 else
 {
     /* 修改订单发货状态为“确认收货” */
-    $sql = "UPDATE " . $ecs->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "' WHERE order_id = '$order_id'";
+    $sql = "UPDATE " . $ecs->table('order_info') . " SET shipping_status = '" . SS_RECEIVED . "',lastmodify='".time()."' WHERE order_id = '$order_id'";
     $db->query($sql);
 
     /* 记录日志 */

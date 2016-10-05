@@ -3,8 +3,8 @@
 define('IN_ECS', true);
 
 /* 鎶ュ憡鎵€鏈夐敊璇 */
-//ini_set('display_errors',  1);
-//error_reporting(E_ALL ^ E_NOTICE);
+ini_set('display_errors',  1);
+error_reporting(E_ALL ^ E_NOTICE);
 
 /* 娓呴櫎鎵€鏈夊拰鏂囦欢鎿嶄綔鐩稿叧鐨勭姸鎬佷俊鎭 */
 clearstatcache();

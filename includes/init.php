@@ -18,7 +18,7 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 if (__FILE__ == '')
 {
@@ -136,7 +136,7 @@ if (is_spider())
         /* 整合UC后，如果是蜘蛛访问，初始化UC需要的常量 */
         if($_CFG['integrate_code'] == 'ucenter')
         {
-             $user = & init_users();
+             $user = init_users();
         }
     }
     $_SESSION = array();
@@ -201,12 +201,12 @@ if (!defined('INIT_NO_SMARTY'))
 if (!defined('INIT_NO_USERS'))
 {
     /* 会员信息 */
-    $user =& init_users();
+    $user = init_users();
 
     if (!isset($_SESSION['user_id']))
     {
         /* 获取投放站点的名称 */
-        $site_name = isset($_GET['from'])   ? $_GET['from'] : addslashes($_LANG['self_site']);
+        $site_name = isset($_GET['from'])   ? htmlspecialchars($_GET['from']) : addslashes($_LANG['self_site']);
         $from_ad   = !empty($_GET['ad_id']) ? intval($_GET['ad_id']) : 0;
 
         $_SESSION['from_ad'] = $from_ad; // 用户点击的广告ID
@@ -283,11 +283,11 @@ if (!defined('INIT_NO_USERS'))
 
 if ((DEBUG_MODE & 1) == 1)
 {
-//    error_reporting(E_ALL);
+    error_reporting(E_ALL);
 }
 else
 {
-//    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
+    error_reporting(E_ALL ^ (E_NOTICE | E_WARNING)); 
 }
 if ((DEBUG_MODE & 4) == 4)
 {
@@ -303,5 +303,4 @@ else
 {
     ob_start();
 }
-
 ?>

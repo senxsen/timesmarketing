@@ -151,4 +151,10 @@ $_LANG['sms_charge']      = '短信充值';
 $_LANG['send_history']    = '发送记录';
 $_LANG['charge_history']  = '充值记录 ';
 
+//云服务中心管理
+$_LANG['certificate_manage'] = '授权绑定';
+
+//移动版全民分销开通引导页管理
+$_LANG['lead_manage'] = '移动版';
+
 ?>

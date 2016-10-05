@@ -62,6 +62,7 @@ define('CART_GROUP_BUY_GOODS',      1); // 团购商品
 define('CART_AUCTION_GOODS',        2); // 拍卖商品
 define('CART_SNATCH_GOODS',         3); // 夺宝奇兵
 define('CART_EXCHANGE_GOODS',       4); // 积分商城
+define('CART_REPURCHASE',           5); // 再次购买
 
 /* 订单状态 */
 define('OS_UNCONFIRMED',            0); // 未确认
@@ -237,5 +238,44 @@ define('LICENSE_VERSION', '1.0');
 
 /* 配送方式 */
 define('SHIP_LIST', 'cac|city_express|ems|flat|fpd|post_express|post_mail|presswork|sf_express|sto_express|yto|zto');
+
+/* 矩阵相关接口 */
+define('VERIFY_APP_ID', 'ecshop_b2c');//矩阵接口类型
+
+/* 外网 */
+define('MATRIX_HOST','http://www.matrix.ecos.shopex.cn');//外网申请绑定
+define('MATRIX_COMMIT_URL_SYNC','http://matrix.ecos.shopex.cn/sync');//矩阵同步API
+define('MATRIX_REALTION_URL','http://www.matrix.ecos.shopex.cn/?');//关系绑定API
+define('SMS_RESOURCE_URL', 'http://resource.shopex.cn');//短信平台地址
+define('YUNQI_LOGISTIC_URL','http://es.shopex.cn/');/* 云起物流地址 */
+define('AUTH_USER_URL', 'http://license.shopex.cn');/* 授权地址 */
+define('YUNQI_ACCOUNT_URL', 'https://account.shopex.cn/cashier');/* 云起收银地址 */
+define('OAUTH_API_PATH', 'api');
+
+/* openapi相关 */
+define('OPENAPI_KEY', 'yogfss4l');
+define('OPENAPI_SECRET', 'grhugs2oplt664ckgp3i');
+define('OPENAPI_SITE', 'https://openapi.shopex.cn');
+define('OPENAPI_OAUTH', 'https://openapi.shopex.cn/oauth');
+
+/* 云起服务地址 */
+define('YUNQI_SERVICE_URL','http://fw.yunqi.shopex.cn/iframe?');
+
+/* auth的产品code */
+define('PRODUCT_CODE', 'product_0119');
+define('GOODS_CODE','goods_1097');
+
+/* 版本地址 */
+define('VERSION_GBK', 'http://cloud.ecshop.com/version/release_gbk.txt');
+define('VERSION_UTF8', 'http://cloud.ecshop.com/version/release_utf8.txt');
+
+/* debug start */
+define('DEBUG_API' , true);
+define('LOG_DIR', ROOT_PATH."logs/".date("Y-m",time()));
+/* debug end*/
+
+define('PMP_DESKTOP', 'http://pmp.shopex.cn/index.php?app=ad&ctl=display&act=index&nobar=1&nobtn=1&code=babda8d9d1c2863bd2b6091fce411881&entid=131110483129&username=&r=1461304885');
+define('PMS_MARKET', 'http://pmp.shopex.cn/index.php?app=ad&ctl=display&act=index&nobar=1&nobtn=1&code=01564ca0eb12162bcb6801ac67c97f07&entid=131110483129&username=&r=1461304885');
+
 
 ?>

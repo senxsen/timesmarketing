@@ -77,7 +77,7 @@ $_LANG['role_manage'] = ' Role Management';
 
 //Authorization  of system setup management
 $_LANG['shop_config'] = 'Shop config';
-$_LANG['shop_authorized'] = 'Authorized';
+// $_LANG['shop_authorized'] = 'Authorized';
 $_LANG['webcollect_manage'] = 'Webcollect';
 $_LANG['ship_manage'] = 'Shipping method management';
 $_LANG['payment'] = 'Payment method management';
@@ -152,5 +152,10 @@ $_LANG['sms_charge']      = 'SMS recharge ';
 $_LANG['send_history']    = 'Send record ';
 $_LANG['charge_history']  = 'Voucher record ';
 
+//云服务中心管理
+$_LANG['certificate_manage'] = 'Authorization binding';
+
+//移动版全民分销开通引导页管理
+$_LANG['lead_manage'] = 'wap';
 
 ?>

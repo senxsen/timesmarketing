@@ -6,15 +6,15 @@ body {
   margin: 0px;
   padding: 0px;
   color: #192E32;
-  font: 12px "sans-serif", "Arial", "Verdana";
+  font: 12px Microsoft Yahei, "sans-serif", "Arial", "Verdana";
 }
 
 p, td, div {
-  font: 12px "sans-serif", "Arial", "Verdana";
+  font: 12px Microsoft Yahei, "sans-serif", "Arial", "Verdana";
 }
 
 th {
-  font: 12px "sans-serif", "Arial", "Verdana";
+  font: 12px Microsoft Yahei, "sans-serif", "Arial", "Verdana";
   font-weight: bold;
 }
 
@@ -23,8 +23,12 @@ form {
   padding: 0px;
 }
 
-input, textarea, select {
-  font: 12px "courier new";
+input, textarea, select, button {
+  font: 12px Microsoft Yahei, "courier new";
+}
+
+input,textarea{
+  outline: 0;
 }
 
 a:visited {
@@ -58,4 +62,25 @@ a:active {
 
 .nowrap {
   white-space:nowrap;
+}
+
+.cl-green{
+  color:#278296 !important;
+}
+.cl-orange{
+  color: #f18030 !important;
+}
+.cl-red{
+  color: #FF0000 !important;
+}
+
+.cl-link{
+  color: #0241c0 !important;
+}
+
+.cl-light-green{
+  color: #80bdcb !important;
+}
+.cl-link-blue{
+  color: #41A5E1 !important
 }

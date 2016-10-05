@@ -122,14 +122,30 @@ class transport
         $temp_str = '';
 
         /* 格式化将要发要送的参数 */
-        if ($params && is_array($params))
-        {
-            foreach ($params AS $key => $value)
-            {
-                $temp_str .= '&' . $key . '=' . $value;
+        // if ($params && is_array($params))
+        // {
+        //     foreach ($params AS $key => $value)
+        //     {
+        //         $temp_str .= '&' . $key . '=' . $value;
+        //     }
+        //     $params = preg_replace('/^&/', '', $temp_str);
+        // }
+
+        /* 格式化将要发要送的参数 */
+        $postdata = '';
+        if ($params && is_array($params)){
+            reset($params);
+            while(list($key,$val) = each($params)) {
+                if (is_array($val) || is_object($val)) {
+                    while (list($cur_key, $cur_val) = each($val)) {
+                        $postdata .= urlencode($key)."[]=".urlencode($cur_val)."&";
+                    }
+                } else
+                    $postdata .= urlencode($key)."=".urlencode($val)."&";
             }
-            $params = preg_replace('/^&/', '', $temp_str);
+            $params = $postdata;
         }
+
 
         /* 如果fsockopen存在，且用户不指定使用curl，则调用use_socket函数 */
         if ($fsock_exists && !$this->use_curl)

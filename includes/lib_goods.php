@@ -315,6 +315,7 @@ function get_recommend_goods($type = '', $cats = '')
             $goods[$idx]['name']         = $row['goods_name'];
             $goods[$idx]['brief']        = $row['goods_brief'];
             $goods[$idx]['brand_name']   = isset($goods_data['brand'][$row['goods_id']]) ? $goods_data['brand'][$row['goods_id']] : '';
+            $goods[$idx]['cum_sales']= get_cum_sales($row['goods_id']);
             $goods[$idx]['goods_style_name']   = add_style($row['goods_name'],$row['goods_name_style']);
 
             $goods[$idx]['short_name']   = $GLOBALS['_CFG']['goods_name_length'] > 0 ?
@@ -593,6 +594,9 @@ function get_goods_info($goods_id)
         /* 修正商品图片 */
         $row['goods_img']   = get_image_path($goods_id, $row['goods_img']);
         $row['goods_thumb'] = get_image_path($goods_id, $row['goods_thumb'], true);
+
+        /* 获取商品销量 */
+        $row['cum_sales']   = get_cum_sales($row['goods_id']);
 
         return $row;
     }
@@ -943,6 +947,18 @@ function spec_price($spec)
 {
     if (!empty($spec))
     {
+        if(is_array($spec))
+        {
+            foreach($spec as $key=>$val)
+            {
+                $spec[$key]=addslashes($val);
+            }
+        }
+        else
+        {
+            $spec=addslashes($spec);
+        }
+
         $where = db_create_in($spec, 'goods_attr_id');
 
         $sql = 'SELECT SUM(attr_price) AS attr_price FROM ' . $GLOBALS['ecs']->table('goods_attr') . " WHERE $where";
@@ -1490,5 +1506,20 @@ function get_products_info($goods_id, $spec_goods_attr_id)
         $return_array = $GLOBALS['db']->getRow($sql);
     }
     return $return_array;
+}
+
+
+/**
+ *  获取商品的累计销量
+ * @param       string      $goods_id
+ * @return      int
+ */
+function get_cum_sales($goods_id)
+{
+    $sql = "SELECT sum(goods_number) FROM " . $GLOBALS['ecs']->table('order_goods') . " AS g ,".$GLOBALS['ecs']->table('order_info') . " AS o WHERE o.order_id = g.order_id and g.goods_id = " . $goods_id . " and o.order_status = 5";
+    $cum_sales = $GLOBALS['db']->getOne($sql);
+    $sql_goods = "SELECT virtual_sales FROM " . $GLOBALS['ecs']->table('goods') . " WHERE goods_id = '$goods_id'";
+    $cum_sales += $GLOBALS['db']->getOne($sql_goods);
+    return $cum_sales;
 }
 ?>

@@ -68,6 +68,11 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class tenpayc2c
 {
+    function __construct()
+    {
+        $this->tenpayc2c();
+    }
+
     /**
      * 构造函数
      *
@@ -78,11 +83,6 @@ class tenpayc2c
      */
     function tenpayc2c()
     {
-    }
-
-    function __construct()
-    {
-        $this->tenpayc2c();
     }
 
     /**

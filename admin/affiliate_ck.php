@@ -70,8 +70,8 @@ elseif ($_REQUEST['act'] == 'del')
     if (empty($stat))
     {
         $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-               " SET is_separate = 2" .
-               " WHERE order_id = '$oid'";
+               " SET is_separate = 2,lastmodify = '".gmtime() .
+               "' WHERE order_id = '$oid'";
         $db->query($sql);
     }
     $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');
@@ -196,8 +196,8 @@ elseif ($_REQUEST['act'] == 'separate')
             }
         }
         $sql = "UPDATE " . $GLOBALS['ecs']->table('order_info') .
-               " SET is_separate = 1" .
-               " WHERE order_id = '$oid'";
+               " SET is_separate = 1,lastmodify='".gmtime() .
+               "' WHERE order_id = '$oid'";
         $db->query($sql);
     }
     $links[] = array('text' => $_LANG['affiliate_ck'], 'href' => 'affiliate_ck.php?act=list');

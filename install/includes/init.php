@@ -1,13 +1,13 @@
 <?php
 
-/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ */
-//@ini_set('display_errors', 1);
-//error_reporting(E_ALL ^ E_NOTICE);
+/* ±¨¸æËùÓÐ´íÎó */
+@ini_set('display_errors', 1);
+error_reporting(E_ALL ^ E_NOTICE);
 
-/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðºï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½×´Ì¬ï¿½ï¿½Ï¢ */
+/* Çå³ýËùÓÐºÍÎÄ¼þ²Ù×÷Ïà¹ØµÄ×´Ì¬ÐÅÏ¢ */
 clearstatcache();
 
-/* ï¿½ï¿½ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ */
+/* ¶¨ÒåÕ¾µã¸ù */
 define('ROOT_PATH', str_replace('install/includes/init.php', '', str_replace('\\', '/', __FILE__)));
 
 if (isset($_SERVER['PHP_SELF']))
@@ -19,7 +19,7 @@ else
     define('PHP_SELF', $_SERVER['SCRIPT_NAME']);
 }
 
-/* ï¿½ï¿½ï¿½ï¿½æ±¾ï¿½Ä±ï¿½ï¿½ï¿½ */
+/* ¶¨Òå°æ±¾µÄ±àÂë */
 define('EC_CHARSET','utf-8');
 define('EC_DB_CHARSET','utf8');
 
@@ -27,17 +27,17 @@ require(ROOT_PATH . 'includes/lib_base.php');
 require(ROOT_PATH . 'includes/lib_common.php');
 require(ROOT_PATH . 'includes/lib_time.php');
 
-/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+/* ´´½¨´íÎó´¦Àí¶ÔÏó */
 require(ROOT_PATH . 'includes/cls_error.php');
 $err = new ecs_error('message.dwt');
 
-/* ï¿½ï¿½Ê¼ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+/* ³õÊ¼»¯Ä£°åÒýÇæ */
 require(ROOT_PATH . 'install/includes/cls_template.php');
 $smarty = new template(ROOT_PATH . 'install/templates/');
 
 require(ROOT_PATH . 'install/includes/lib_installer.php');
 
-/* ï¿½ï¿½ï¿½ï¿½HTTPÍ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Ê¶ï¿½ï¿½UTF8ï¿½ï¿½ï¿½ï¿½ */
+/* ·¢ËÍHTTPÍ·²¿£¬±£Ö¤ä¯ÀÀÆ÷Ê¶±ðUTF8±àÂë */
 header('Content-type: text/html; charset='.EC_CHARSET);
 
 @set_time_limit(360);

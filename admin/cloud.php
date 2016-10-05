@@ -16,7 +16,7 @@
 define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require(ROOT_PATH . 'includes/cls_transport.php');
+require_once(ROOT_PATH . 'includes/cls_transport.php');
 require(ROOT_PATH . 'includes/cls_json.php');
 
 require(ROOT_PATH . 'includes/shopex_json.php');
@@ -35,7 +35,7 @@ $data['mysql_ver'] = $db->version();
 $data['shop_url'] = urlencode($ecs->url());
 $data['admin_url'] = urlencode($ecs->url().ADMIN_PATH);
 $data['sess_id'] = $GLOBALS['sess']->get_session_id();
-$data['stamp'] = mktime();
+$data['stamp'] = time();
 $data['ent_id'] = $_CFG['ent_id'];
 $data['ent_ac'] = $_CFG['ent_ac'];
 $data['ent_sign'] = $_CFG['ent_sign'];

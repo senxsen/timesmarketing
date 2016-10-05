@@ -856,6 +856,9 @@ class shopex46
                 $order['money_paid']    = $order['order_amount'];
                 $order['order_amount']  = 0;
             }
+            if (!isset($order['lastmodify']) || !$order['lastmodify']) {
+                $order['lastmodify'] = gmtime();
+            }
 
             if (!$db->autoExecute($ecs->table('order_info'), $order, 'INSERT', '', 'SILENT'))
             {

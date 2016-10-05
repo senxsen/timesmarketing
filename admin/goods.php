@@ -95,6 +95,7 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
     assign_query_info();
     $htm_file = ($_REQUEST['act'] == 'list') ?
         'goods_list.htm' : (($_REQUEST['act'] == 'trash') ? 'goods_trash.htm' : 'group_list.htm');
+    $smarty->assign('pageHtml',$htm_file);
     $smarty->display($htm_file);
 }
 
@@ -169,6 +170,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
             'shop_price'    => 0,
             'promote_price' => 0,
             'market_price'  => 0,
+            'virtual_sales'  => 0,
             'integral'      => 0,
             'goods_number'  => $_CFG['default_storage'],
             'warn_number'   => 1,
@@ -237,6 +239,7 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['ac
                 'shop_price'    => 0,
                 'promote_price' => 0,
                 'market_price'  => 0,
+                'virtual_sales'  => 0,
                 'integral'      => 0,
                 'goods_number'  => 1,
                 'warn_number'   => 1,
@@ -635,9 +638,14 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         {
             $original_img   = $image->upload_image($_FILES['goods_img']); // 原始图片
         }
-        elseif (copy(trim($_POST['goods_img_url']), ROOT_PATH . 'temp/' . basename($_POST['goods_img_url'])))
+        elseif ($_POST['goods_img_url'])
         {
-            $original_img = 'temp/' . basename($_POST['goods_img_url']);
+            
+            if(preg_match('/(.jpg|.png|.gif|.jpeg)$/',$_POST['goods_img_url']) && copy(trim($_POST['goods_img_url']), ROOT_PATH . 'temp/' . basename($_POST['goods_img_url'])))
+            {
+                  $original_img = 'temp/' . basename($_POST['goods_img_url']);
+            }
+            
         }
 
         if ($original_img === false)
@@ -793,6 +801,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     /* 处理商品数据 */
     $shop_price = !empty($_POST['shop_price']) ? $_POST['shop_price'] : 0;
     $market_price = !empty($_POST['market_price']) ? $_POST['market_price'] : 0;
+    $virtual_sales = !empty($_POST['virtual_sales']) ? $_POST['virtual_sales'] : 0;
     $promote_price = !empty($_POST['promote_price']) ? floatval($_POST['promote_price'] ) : 0;
     $is_promote = empty($promote_price) ? 0 : 1;
     $promote_start_date = ($is_promote && !empty($_POST['promote_start_date'])) ? local_strtotime($_POST['promote_start_date']) : 0;
@@ -825,12 +834,12 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         if ($code == '')
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, " .
+            "cat_id, brand_id, shop_price, market_price, virtual_sales, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, rank_integral, suppliers_id)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
-                    "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', ".
+                "'$brand_id', '$shop_price', '$market_price', '$virtual_sales', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', '$is_on_sale', '$is_alone_sale', $is_shipping, ".
@@ -839,12 +848,12 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         else
         {
             $sql = "INSERT INTO " . $ecs->table('goods') . " (goods_name, goods_name_style, goods_sn, " .
-                    "cat_id, brand_id, shop_price, market_price, is_promote, promote_price, " .
+                    "cat_id, brand_id, shop_price, market_price, virtual_sales, is_promote, promote_price, " .
                     "promote_start_date, promote_end_date, goods_img, goods_thumb, original_img, keywords, goods_brief, " .
                     "seller_note, goods_weight, goods_number, warn_number, integral, give_integral, is_best, is_new, is_hot, is_real, " .
                     "is_on_sale, is_alone_sale, is_shipping, goods_desc, add_time, last_update, goods_type, extension_code, rank_integral)" .
                 "VALUES ('$_POST[goods_name]', '$goods_name_style', '$goods_sn', '$catgory_id', " .
-                    "'$brand_id', '$shop_price', '$market_price', '$is_promote','$promote_price', ".
+                    "'$brand_id', '$shop_price', '$market_price', '$virtual_sales', '$is_promote','$promote_price', ".
                     "'$promote_start_date', '$promote_end_date', '$goods_img', '$goods_thumb', '$original_img', ".
                     "'$_POST[keywords]', '$_POST[goods_brief]', '$_POST[seller_note]', '$goods_weight', '$goods_number',".
                     " '$warn_number', '$_POST[integral]', '$give_integral', '$is_best', '$is_new', '$is_hot', 0, '$is_on_sale', '$is_alone_sale', $is_shipping, ".
@@ -877,6 +886,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
                 "brand_id = '$brand_id', " .
                 "shop_price = '$shop_price', " .
                 "market_price = '$market_price', " .
+                "virtual_sales = '$virtual_sales', " .
                 "is_promote = '$is_promote', " .
                 "promote_price = '$promote_price', " .
                 "promote_start_date = '$promote_start_date', " .
@@ -1135,9 +1145,15 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     /* 清空缓存 */
     clear_cache_files();
 
+    /* 是否有货品 */
+    $specifications_list = get_goods_specifications_list($goods_id);
+    $product_list_url = $GLOBALS['ecs']->url()."admin/goods.php?act=product_list&goods_id=".$goods_id;
+    if($specifications_list){
+        echo '<script type="text/javascript">window.location.href="'.$product_list_url.'";</script>';exit;
+    }
     /* 提示页面 */
     $link = array();
-    if (check_goods_specifications_exist($goods_id))
+    if (check_goods_specifications_exist($goods_id) && $specifications_list)
     {
         $link[0] = array('href' => 'goods.php?act=product_list&goods_id=' . $goods_id, 'text' => $_LANG['product']);
     }
@@ -2554,6 +2570,32 @@ elseif ($_REQUEST['act'] == 'batch_product')
 
     /* 返回 */
     sys_msg($_LANG['no_operation'], 1, $link);
+}
+/*------------------------------------------------------ */
+//-- 修改商品虚拟数量
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'edit_virtual_sales')
+{
+    check_authz_json('goods_manage');
+
+    $goods_id   = intval($_POST['id']);
+    $virtual_sales  = intval($_POST['val']);
+
+    if($virtual_sales < 0 || $virtual_sales == 0 && $_POST['val'] != "$virtual_sales")
+    {
+        make_json_error($_LANG['virtual_sales_error']);
+    }
+
+    if(check_goods_product_exist($goods_id) == 1)
+    {
+        make_json_error($_LANG['sys']['wrong'] . $_LANG['cannot_goods_number']);
+    }
+
+    if ($exc->edit("virtual_sales = '$virtual_sales', last_update=" .gmtime(), $goods_id))
+    {
+        clear_cache_files();
+        make_json_result($virtual_sales);
+    }
 }
 
 /**

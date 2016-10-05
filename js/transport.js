@@ -141,6 +141,7 @@ var Transport =
 
                 if (typeof(callback) === "function")
                 {
+                  //这里会报错呢。。真是666  原因是xhr.responseText不是对象格式的字符串,担心有其他功能,这里先搁置
                   callback.call(self, self.parseResult(responseType, xhr), xhr.responseText);
                 }
               break;
