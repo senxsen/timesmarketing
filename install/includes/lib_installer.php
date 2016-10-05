@@ -28,7 +28,9 @@ function get_gd_version()
 {
     include_once(ROOT_PATH . 'includes/cls_image.php');
 
-    return cls_image::gd_version();
+    //return cls_image::gd_version();
+    $gd = new cls_image;
+    return $gd->gd_version();
 }
 
 /**
