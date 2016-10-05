@@ -19,7 +19,7 @@ if (!defined('IN_ECS'))
 }
 define('ECS_WAP', true);
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 if (__FILE__ == '')
 {
@@ -171,11 +171,11 @@ if (!defined('INIT_NO_USERS'))
 
 if ((DEBUG_MODE & 1) == 1)
 {
-    error_reporting(E_ALL);
+//    error_reporting(E_ALL);
 }
 else
 {
-    error_reporting(E_ALL ^ E_NOTICE);
+//    error_reporting(E_ALL ^ E_NOTICE);
 }
 if ((DEBUG_MODE & 4) == 4)
 {

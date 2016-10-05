@@ -20,7 +20,7 @@ if (!defined('IN_ECS'))
 
 define('ECS_ADMIN', true);
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 if (__FILE__ == '')
 {
@@ -360,11 +360,11 @@ header('Pragma: no-cache');
 
 if ((DEBUG_MODE & 1) == 1)
 {
-    error_reporting(E_ALL);
+//    error_reporting(E_ALL);
 }
 else
 {
-    error_reporting(E_ALL ^ E_NOTICE);
+//    error_reporting(E_ALL ^ E_NOTICE);
 }
 if ((DEBUG_MODE & 4) == 4)
 {
