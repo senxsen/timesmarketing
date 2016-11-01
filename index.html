@@ -23,6 +23,17 @@
         <link rel="stylesheet" href="css/style-responsive.css">
         <link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css" media="all" />
 
+        <style>
+            .span3{
+                width:33%;
+                padding: 0 0 0 0;
+                margin: 0;
+            }
+            .span12{
+                width:100%;
+            }
+        </style>
+
 
     </head>
     <body>
@@ -30,7 +41,7 @@
         <section id="home">
             <div class="row centered">
 
-                <h1 class="fade-it"><img alt="YOURLOGO" src="img/logo_header.png"></h1>
+                <h1 class="fade-it"><img alt="時空LOGO" src="img/logo_header.png"></h1>
                 <!-- <div class="flexslider">
                     <ul class="slides">
                         <li>
@@ -46,9 +57,8 @@
                     </ul>
                 </div> -->
             </div>
-
             <!-- LITTLE LOGO SEE WHAT WE DO --> 
-            <div id="down_button" class="fade-it"><a href="#whatwedo"></a></div>
+            <div id="down_button" class="fade-it"><a href="#services"></a></div>
             <div class="social-header hidden-phone">
 
                 <a href="#" class="social-network sn2 behance"></a>
@@ -58,16 +68,12 @@
                 <a href="#" class="social-network sn2 dribbble"></a>
                 <a href="#" class="social-network sn2 lastfm"></a>
                 <a href="#" class="social-network sn2 forrst"></a>
-                <a href="#" class="social-network sn2 xing"></a>   
-
-
+                <a href="#" class="social-network sn2 xing"></a>
             </div>
-            <!-- END LITTLE LOGO SEE WHAT WE DO --> 
-
+            <!-- END LITTLE LOGO SEE WHAT WE DO -->
         </section>
         <!-- END HEADER HOME  -->
         <!-- NAVIGATION  -->
-
         <div class="navbar-wrapper">
             <div class="navbar" id="navigation">
                 <div class="navbar-inner">
@@ -76,14 +82,14 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="brand" href="">  <img src="img/logo_small.png"></a>
+                    <a class="brand" href="#home">  <img src="img/logo_small.png"></a>
                     <div class="nav-collapse collapse" >
                         <ul class="nav pull-right">
-                            <li><a href="#home" class="selected">Home</a></li>
-                            <li><a href="#services">services</a></li>
-                            <li><a href="#whatwedo">portfolio</a></li>
-                            <!-- <li><a href="#about">who we are</a></li> -->
-                            <li><a href="#contact">Contact</a></li>
+                            <!--<li><a href="#home" class="selected">Home</a></li>-->
+                            <li><a href="#services">services 時空專業</a></li>
+                            <li><a href="#whatwedo">portfolio 時空案例</a></li>
+                            <li><a href="http://shop.timesmarketing.tw" target="_blank" >SHOP 時空商店</a></li>
+                            <li><a href="#contact">Contact 聯絡我們</a></li>
 
 
                         </ul>
@@ -94,9 +100,7 @@
         <!--</div>-->
         <!-- END NAVIGATION  -->
 
-
         <!-- SERVICES SECTION  -->
-
         <section id="services">
 
             <div class="container">
@@ -172,10 +176,10 @@
 
         </section>        
         <!-- END SERVICES  -->
-    
+
         <!-- WHAT WE DO SECTION  -->
         <section id="whatwedo">
-            <div class="container">
+            <div class="container" style="margin:0; width: 100%;">
                 <div class="row">
                     <div class="span12 centered">
                         <h2>portfolio</h2>
@@ -188,7 +192,6 @@
                     </div>
                 </div>
                 <div class="row">
-
                     <div class="span3 project">
 
                         <img src="img/thumbs/1.png" alt="" class="project-img">
@@ -304,8 +307,7 @@
                 </div>
             </div>
         </section>
-        <!-- END WHAT WE DO SECTION  -->   
-
+        <!-- END WHAT WE DO SECTION  -->
 
          
 
@@ -415,7 +417,14 @@
                                 Mon-Fri: 9:00am → 5:30pm <br>
                             </p>
                             <p class="contactAddress">101 Tower 88F <br>Taiwan (R.O.C)
-                                <br><a class="fancybox-media fancybox.iframe" href="https://maps.google.com/maps/ms?ie=UTF8&oe=UTF8&msa=0&msid=218337429610107903639.00047c7b97971cc480289&dg=feature&t=h&ll=48.857423,2.286819&spn=0.002471,0.00456&z=17&iwloc=00047c7b9b089f45e6058&output=embed">View Map</a></p>
+                                <br><a class="fancybox-media fancybox.iframe" href="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.0050382987697!2d121.56232121453482!3d25.033903083972298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abb6da9c9e1f%3A0x1206bcf082fd10a6!2zMTEw6Ie65YyX5biC5L-h576p5Y2A5L-h576p6Lev5LqU5q61N-iZn-WPsOWMlzEwMeWkp-aokw!5e0!3m2!1szh-TW!2stw!4v1477708210702">View Map</a>
+                                <!--https://maps.google.com/maps/ms?ie=UTF8&oe=UTF8&msa=0&msid=218337429610107903639.00047c7b97971cc480289&dg=feature&t=h&ll=48.857423,2.286819&spn=0.002471,0.00456&z=17&iwloc=00047c7b9b089f45e6058&output=embed-->
+                            </p>
+                            <div class="map">
+                                <iframe class="fancybox-media fancybox.iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.0050382987697!2d121.56232121453482!3d25.033903083972298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442abb6da9c9e1f%3A0x1206bcf082fd10a6!2zMTEw6Ie65YyX5biC5L-h576p5Y2A5L-h576p6Lev5LqU5q61N-iZn-WPsOWMlzEwMeWkp-aokw!5e0!3m2!1szh-TW!2stw!4v1477708210702" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen>
+                                </iframe>
+                            </div>
+
                         </div>
                     </div>
                     <div class="span5">
@@ -423,14 +432,19 @@
                             <!-- <p class="contactPhone">Phone: (00) 1234 5678</p> -->
                             <p class="contactEmail">Email: <a href="#">timesmarketing.tw@gmail.com</a></p>
                             <p class="contactSkype">Line: <a href="#">TimesMarketing</a></p>
+
                             <form id="callback-form" action="#" class="bordered-top-medium" role="form">
                                 <div class="input-group">
-                                    <label class="sr-only" for="callback-number">Your Number</label>
-                                    <input type="tel" class="form-control" id="callback-number" placeholder="Your Number">
-                                    <span class="input-group-btn">
-                                        <button class="button btn btn-primary" type="button">Get Callback</button>
-                                    </span>
-                                </div>
+                                    <input type="text" class="form-control" placeholder="Your Number" style="width:70%; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">
+                                    <button class="btn btn-default" type="button" style="width: 30%;font-size: 12px; line-height: 30px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;">Get CallBack</button>
+                                </div><!-- /input-group -->
+                                <!--<div class="input-group">-->
+                                    <!--<label class="sr-only" for="callback-number">Your Number</label>-->
+                                    <!--<input type="tel" class="form-control" id="callback-number" placeholder="Your Number">-->
+                                    <!--<span class="input-group-btn">-->
+                                        <!--<button class="button btn btn-primary" type="button">Get Callback</button>-->
+                                    <!--</span>-->
+                                <!--</div>-->
                             </form>
                         </div>
                     </div>    
