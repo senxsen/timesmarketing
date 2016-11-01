@@ -53,7 +53,8 @@ jQuery(function($) {
 /* -- 03. SCROLL TO  -- */
 
 
-$('ul.nav a, #down_button a').click(function(e) {
+$('ul.nav a[data-label!="no"], #down_button a').click(function(e) {
+    //if($(this).data("label") == 'no') return;
     $('html,body').scrollTo(this.hash, this.hash);
     e.preventDefault();
 });
