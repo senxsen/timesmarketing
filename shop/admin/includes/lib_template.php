@@ -509,6 +509,7 @@ function get_setted($lib, &$arr)
  * @param   array   $curr_page_libs   缺少xml文件时的默认编辑区信息数组
  * @return  array   $edit_libs        返回可编辑的库文件数组
  */
+include ('xml.php');
 function get_editable_libs($curr_template, $curr_page_libs)
 {
     global $_CFG;
@@ -517,7 +518,7 @@ function get_editable_libs($curr_template, $curr_page_libs)
 
     if ($xml_content = @file_get_contents(ROOT_PATH . 'themes/' . $_CFG['template'] . '/libs.xml'))
     {
-        $p = xml_parser_create_ns();                                                   //把xml解析到数组
+        $p = xml_parser_create();                                                   //把xml解析到数组
         xml_parse_into_struct($p,$xml_content,$vals,$index);
         xml_parser_free($p);
 
