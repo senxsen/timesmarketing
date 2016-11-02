@@ -517,7 +517,7 @@ function get_editable_libs($curr_template, $curr_page_libs)
 
     if ($xml_content = @file_get_contents(ROOT_PATH . 'themes/' . $_CFG['template'] . '/libs.xml'))
     {
-        $p = xml_parser_create();                                                   //把xml解析到数组
+        $p = xml_parser_create_ns();                                                   //把xml解析到数组
         xml_parse_into_struct($p,$xml_content,$vals,$index);
         xml_parser_free($p);
 
